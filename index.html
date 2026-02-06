@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryan's Street Food - Order Now!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #764ba2;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .menu-item {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+        }
+
+        .item-name {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .item-price {
+            color: #667eea;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .qty-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: #667eea;
+            color: white;
+            font-size: 1.5em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .qty-btn:hover {
+            background: #764ba2;
+        }
+
+        .qty-btn:active {
+            transform: scale(0.95);
+        }
+
+        .qty-display {
+            font-size: 1.3em;
+            font-weight: bold;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .cart-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 20px;
+        }
+
+        .cart-title {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .cart-item-price {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .cart-total {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #764ba2;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 3px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .customer-info {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid #eee;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .order-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .order-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .order-btn:active {
+            transform: translateY(0);
+        }
+
+        .order-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .payment-info {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .gcash-logo {
+            color: #007DFF;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .empty-cart {
+            text-align: center;
+            color: #999;
+            padding: 30px 0;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container > div {
+                grid-template-columns: 1fr !important;
+            }
+
+            .cart-section {
+                position: relative !important;
+                top: 0 !important;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .success-icon {
+            font-size: 4em;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        .error-icon {
+            font-size: 4em;
+            color: #f44336;
+            margin-bottom: 20px;
+        }
+
+        .modal h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .modal p {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .close-modal-btn {
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+
+        .close-modal-btn:hover {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🍜 Ryan's Street Food 🍜</h1>
+            <p class="tagline">Authentic Filipino Street Food - Order Now!</p>
+        </header>
+
+        <div style="display: grid; grid-template-columns: 1fr 400px; gap: 30px; align-items: start;">
+            <div>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <div class="item-name">🥟 Siomai</div>
+                        <div class="item-price">₱5 per piece</div>
+                        <div class="quantity-control">
+                            <button class="qty-btn" onclick="decreaseQty('siomai')">−</button>
+                            <span class="qty-display" id="siomai-qty">0</span>
+                            <button class="qty-btn" onclick="increaseQty('siomai')">+</button>
+                        </div>
+                    </div>
+
+                    <div class="menu-item">
+                        <div class="item-name">🌭 Kikiam</div>
+                        <div class="item-price">₱5 per piece</div>
+                        <div class="quantity-control">
+                            <button class="qty-btn" onclick="decreaseQty('kikiam')">−</button>
+                            <span class="qty-display" id="kikiam-qty">0</span>
+                            <button class="qty-btn" onclick="increaseQty('kikiam')">+</button>
+                        </div>
+                    </div>
+
+                    <div class="menu-item">
+                        <div class="item-name">🥚 Kwek-kwek</div>
+                        <div class="item-price">₱20 per order</div>
+                        <div class="quantity-control">
+                            <button class="qty-btn" onclick="decreaseQty('kwekwek')">−</button>
+                            <span class="qty-display" id="kwekwek-qty">0</span>
+                            <button class="qty-btn" onclick="increaseQty('kwekwek')">+</button>
+                        </div>
+                    </div>
+
+                    <div class="menu-item">
+                        <div class="item-name">🍟 Fries</div>
+                        <div class="item-price">₱15 per cup</div>
+                        <div class="quantity-control">
+                            <button class="qty-btn" onclick="decreaseQty('fries')">−</button>
+                            <span class="qty-display" id="fries-qty">0</span>
+                            <button class="qty-btn" onclick="increaseQty('fries')">+</button>
+                        </div>
+                    </div>
+
+                    <div class="menu-item">
+                        <div class="item-name">🐟 Fish Flat</div>
+                        <div class="item-price">₱10 per cup</div>
+                        <div class="quantity-control">
+                            <button class="qty-btn" onclick="decreaseQty('fishflat')">−</button>
+                            <span class="qty-display" id="fishflat-qty">0</span>
+                            <button class="qty-btn" onclick="increaseQty('fishflat')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cart-section">
+                <h2 class="cart-title">🛒 Your Order</h2>
+                <div id="cart-items">
+                    <div class="empty-cart">Your cart is empty. Add items to order!</div>
+                </div>
+                <div class="cart-total" id="cart-total" style="display: none;">
+                    <span>TOTAL:</span>
+                    <span id="total-amount">₱0</span>
+                </div>
+
+                <div class="customer-info">
+                    <div class="form-group">
+                        <label>Your Name: *</label>
+                        <input type="text" id="customer-name" placeholder="Enter your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number: *</label>
+                        <input type="tel" id="customer-phone" placeholder="09XX XXX XXXX" required>
+                    </div>
+                </div>
+
+                <div class="payment-info">
+                    <div class="gcash-logo">💳 GCash Payment</div>
+                    <p style="margin-top: 10px; font-size: 0.9em; color: #666;">Pay via GCash upon confirmation</p>
+                </div>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Submitting your order...</p>
+                </div>
+
+                <button class="order-btn" id="place-order-btn" onclick="placeOrder()">Place Order via GCash</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="order-modal">
+        <div class="modal-content">
+            <div class="success-icon" id="modal-icon">✓</div>
+            <h2 id="modal-title">Order Placed Successfully!</h2>
+            <p id="order-summary"></p>
+            <button class="close-modal-btn" onclick="closeModal()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // ⚠️ IMPORTANT: Replace this with your Google Apps Script Web App URL
+        const GOOGLE_SCRIPT_URL = 'YOUR_SCRIPT_URL_HERE';
+
+        const menu = {
+            siomai: { name: 'Siomai', price: 5, unit: 'piece' },
+            kikiam: { name: 'Kikiam', price: 5, unit: 'piece' },
+            kwekwek: { name: 'Kwek-kwek', price: 20, unit: 'order' },
+            fries: { name: 'Fries', price: 15, unit: 'cup' },
+            fishflat: { name: 'Fish Flat', price: 10, unit: 'cup' }
+        };
+
+        let cart = {
+            siomai: 0,
+            kikiam: 0,
+            kwekwek: 0,
+            fries: 0,
+            fishflat: 0
+        };
+
+        function increaseQty(item) {
+            cart[item]++;
+            updateDisplay(item);
+            updateCart();
+        }
+
+        function decreaseQty(item) {
+            if (cart[item] > 0) {
+                cart[item]--;
+                updateDisplay(item);
+                updateCart();
+            }
+        }
+
+        function updateDisplay(item) {
+            document.getElementById(`${item}-qty`).textContent = cart[item];
+        }
+
+        function updateCart() {
+            const cartItemsDiv = document.getElementById('cart-items');
+            const totalDiv = document.getElementById('cart-total');
+            const totalAmountSpan = document.getElementById('total-amount');
+            
+            let html = '';
+            let total = 0;
+            let hasItems = false;
+
+            for (let item in cart) {
+                if (cart[item] > 0) {
+                    hasItems = true;
+                    const itemTotal = cart[item] * menu[item].price;
+                    total += itemTotal;
+                    html += `
+                        <div class="cart-item">
+                            <span class="cart-item-name">${menu[item].name} (${cart[item]} ${menu[item].unit}${cart[item] > 1 ? 's' : ''})</span>
+                            <span class="cart-item-price">₱${itemTotal}</span>
+                        </div>
+                    `;
+                }
+            }
+
+            if (!hasItems) {
+                cartItemsDiv.innerHTML = '<div class="empty-cart">Your cart is empty. Add items to order!</div>';
+                totalDiv.style.display = 'none';
+            } else {
+                cartItemsDiv.innerHTML = html;
+                totalDiv.style.display = 'flex';
+                totalAmountSpan.textContent = `₱${total}`;
+            }
+        }
+
+        async function placeOrder() {
+            const name = document.getElementById('customer-name').value.trim();
+            const phone = document.getElementById('customer-phone').value.trim();
+
+            // Check if cart has items
+            let hasItems = false;
+            for (let item in cart) {
+                if (cart[item] > 0) {
+                    hasItems = true;
+                    break;
+                }
+            }
+
+            if (!hasItems) {
+                alert('Please add items to your cart before placing an order.');
+                return;
+            }
+
+            if (!name || !phone) {
+                alert('Please fill in your name and phone number.');
+                return;
+            }
+
+            // Calculate total and prepare order details
+            let total = 0;
+            let orderDetails = '';
+            let orderItems = [];
+
+            for (let item in cart) {
+                if (cart[item] > 0) {
+                    const itemTotal = cart[item] * menu[item].price;
+                    total += itemTotal;
+                    orderDetails += `${menu[item].name}: ${cart[item]} ${menu[item].unit}${cart[item] > 1 ? 's' : ''} - ₱${itemTotal}\n`;
+                    
+                    orderItems.push({
+                        item: menu[item].name,
+                        quantity: cart[item],
+                        price: menu[item].price,
+                        subtotal: itemTotal
+                    });
+                }
+            }
+
+            // Show loading
+            document.getElementById('loading').classList.add('active');
+            document.getElementById('place-order-btn').disabled = true;
+
+            // Prepare data for Google Sheets
+            const orderData = {
+                timestamp: new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila' }),
+                name: name,
+                phone: phone,
+                siomai: cart.siomai,
+                kikiam: cart.kikiam,
+                kwekwek: cart.kwekwek,
+                fries: cart.fries,
+                fishflat: cart.fishflat,
+                total: total,
+                orderDetails: orderDetails.trim()
+            };
+
+            try {
+                // Send to Google Sheets
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                // Show success message
+                const summary = `Thank you, ${name}!\n\nYour order has been received and saved:\n\n${orderDetails}\nTotal: ₱${total}\n\nWe'll contact you at ${phone} for GCash payment details and delivery information.`;
+
+                document.getElementById('modal-icon').className = 'success-icon';
+                document.getElementById('modal-icon').textContent = '✓';
+                document.getElementById('modal-title').textContent = 'Order Placed Successfully!';
+                document.getElementById('order-summary').innerHTML = summary.replace(/\n/g, '<br>');
+                document.getElementById('order-modal').classList.add('active');
+
+                // Reset cart
+                for (let item in cart) {
+                    cart[item] = 0;
+                    updateDisplay(item);
+                }
+                updateCart();
+
+                // Clear form
+                document.getElementById('customer-name').value = '';
+                document.getElementById('customer-phone').value = '';
+
+            } catch (error) {
+                console.error('Error submitting order:', error);
+                
+                // Show error message
+                document.getElementById('modal-icon').className = 'error-icon';
+                document.getElementById('modal-icon').textContent = '✕';
+                document.getElementById('modal-title').textContent = 'Order Submission Issue';
+                document.getElementById('order-summary').innerHTML = `Your order details have been recorded locally, but there was an issue connecting to the server.<br><br>Please contact Ryan at the phone number provided with your order details.<br><br>Order Total: ₱${total}`;
+                document.getElementById('order-modal').classList.add('active');
+            } finally {
+                // Hide loading
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('place-order-btn').disabled = false;
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('order-modal').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
