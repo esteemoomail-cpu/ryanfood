@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryan's Filipino Street Food</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fcf4ed; /* Warmer background */
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f97316; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ea580c; 
+        }
+
+        .food-card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+</head>
+<body class="bg-orange-50 min-h-screen pb-24 text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-red-600 to-orange-600 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="bg-white text-red-600 p-1.5 rounded-lg font-bold text-xl">R</div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold tracking-tight leading-none">Ryan's Filipino Street Food</h1>
+                    <p class="text-red-100 text-xs opacity-90">Siomai, Kikiam, Kwek-kwek & More!</p>
+                </div>
+            </div>
+            <div class="relative cursor-pointer hover:scale-105 transition-transform" onclick="toggleCart()">
+                <div class="bg-white/20 p-2 rounded-full backdrop-blur-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                </div>
+                <span id="cart-badge" class="absolute -top-1 -right-1 bg-yellow-400 text-red-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center transform scale-0 transition-transform duration-200 border border-white">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-5xl mx-auto px-4 py-6">
+        
+        <!-- Welcome Banner -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-8 border-l-4 border-orange-500 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left">
+            <div class="mb-4 sm:mb-0 sm:mr-6 text-4xl">🍢</div>
+            <div>
+                <h2 class="text-xl font-bold text-gray-800 mb-1">Craving Street Food?</h2>
+                <p class="text-gray-600 text-sm">Order your favorites now. We accept <span class="font-bold text-blue-600">GCash</span> payments.</p>
+            </div>
+        </div>
+
+        <!-- Menu Grid -->
+        <div class="flex items-center justify-between mb-4 border-b border-gray-200 pb-2">
+            <h3 class="text-lg font-bold text-gray-800">Menu</h3>
+            <!-- Updated count to 6 -->
+            <span class="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">6 Items Available</span>
+        </div>
+        
+        <div id="menu-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Menu items will be injected here via JavaScript -->
+        </div>
+
+    </main>
+
+    <!-- Cart Modal / Slide-over -->
+    <div id="cart-overlay" class="fixed inset-0 bg-black/50 hidden z-50 backdrop-blur-sm transition-opacity" onclick="toggleCart()"></div>
+    <div id="cart-sidebar" class="fixed inset-y-0 right-0 max-w-sm w-full bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col">
+        
+        <!-- Cart Header -->
+        <div class="bg-gray-900 text-white p-4 flex justify-between items-center shadow-md">
+            <h2 class="text-lg font-bold flex items-center"><span class="mr-2">🛒</span> Your Order</h2>
+            <button onclick="toggleCart()" class="p-1 hover:bg-gray-700 rounded-full transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Cart Items Container -->
+        <div id="cart-items" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+            <!-- Items injected here -->
+        </div>
+
+        <!-- Cart Footer -->
+        <div class="border-t border-gray-200 p-4 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-gray-600">Total Amount</span>
+                <span id="cart-total" class="text-2xl font-bold text-orange-600">₱0.00</span>
+            </div>
+            <button id="checkout-btn" onclick="openCheckout()" class="w-full bg-orange-600 text-white py-3 rounded-lg font-bold shadow-lg hover:bg-orange-700 transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100" disabled>
+                Proceed to Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="fixed inset-0 bg-black/70 hidden z-[60] flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="bg-gradient-to-r from-orange-500 to-red-600 p-4 text-white flex justify-between items-center shrink-0">
+                <h3 class="font-bold text-lg">Checkout</h3>
+                <button onclick="closeCheckout()" class="hover:text-red-100 transition">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto">
+                <form id="order-form" onsubmit="handleOrder(event)">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Your Name</label>
+                            <input type="text" id="customer-name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none transition" placeholder="e.g. Juan dela Cruz">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Contact Number</label>
+                            <input type="tel" id="customer-phone" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none transition" placeholder="09XX XXX XXXX">
+                        </div>
+
+                        <div class="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                            <h4 class="font-bold text-blue-900 mb-2 flex items-center text-sm uppercase tracking-wide">
+                                Payment Method
+                            </h4>
+                            <div class="flex items-center mb-3">
+                                <div class="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded mr-2">GCash</div>
+                                <span class="text-sm text-blue-800">Scan QR or Send Money</span>
+                            </div>
+                            
+                            <div class="bg-white p-3 rounded-lg border border-blue-200 text-center shadow-sm">
+                                <p class="text-xs text-gray-500 mb-1">Send Total Amount: <span id="checkout-total" class="font-bold text-blue-700">₱0.00</span></p>
+                                <p class="text-xl font-mono font-bold text-gray-800 tracking-wider">0917-123-4567</p>
+                                <p class="text-xs text-gray-400 mt-1">Account Name: Ryan S.</p>
+                            </div>
+                            <p class="text-[10px] text-blue-600 mt-2 text-center">Please take a screenshot of your payment receipt.</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold shadow-md hover:bg-green-700 transition flex justify-center items-center">
+                            <span>Place Order</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 bg-black/80 hidden z-[70] flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 text-center animate-bounce-in">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-1">Order Ready!</h3>
+            <p class="text-gray-500 mb-4 text-sm">Please send this summary to Ryan.</p>
+            
+            <div class="bg-gray-100 rounded-lg p-3 mb-4 text-left border border-gray-200">
+                <p class="text-xs text-gray-500 mb-1 font-bold uppercase tracking-wider">Order Summary</p>
+                <textarea id="order-summary-text" class="w-full bg-white border border-gray-300 rounded p-2 text-xs font-mono h-32 focus:outline-none resize-none" readonly></textarea>
+            </div>
+
+            <button onclick="copyToClipboard()" id="copy-btn" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold hover:bg-blue-700 transition mb-2 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                </svg>
+                Copy Order
+            </button>
+            <button onclick="resetApp()" class="w-full bg-gray-200 text-gray-800 py-2 rounded-lg font-semibold hover:bg-gray-300 transition">Close</button>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg text-sm transition-opacity duration-300 opacity-0 pointer-events-none z-[80]">
+        Copied to clipboard!
+    </div>
+
+    <script>
+        // Menu Data
+        const menuItems = [
+            {
+                id: 1,
+                name: "Siomai",
+                price: 5,
+                unit: "pc",
+                image: "https://images.yummy.ph/yummy/uploads/2009/10/08-2008_yummy.ph_recipe_image_siomai_main-1.jpg",
+                desc: "Steamed pork dumplings with calamansi & chili garlic."
+            },
+            {
+                id: 2,
+                name: "Kikiam",
+                price: 5,
+                unit: "pc",
+                image: "https://messages-prod.27c852f3500f38c1e7786e2c9ff9e48f.r2.cloudflarestorage.com/019c3218-17fe-709b-b91f-ae4fd190b69b/1770367098291-019c3218-e7d4-76a6-9a6d-858a0f4f0b6d.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=af634fe044bd071ab4c5d356fdace60f%2F20260206%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20260206T083818Z&X-Amz-Expires=3600&X-Amz-Signature=113a931d66fd18130e7920ea61df616421c671c7e4be0f531602156e62a1353e&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+                desc: "Fried fish meat rolls. Best with sweet & spicy sauce."
+            },
+            {
+                id: 3,
+                name: "Kwek-kwek",
+                price: 20,
+                unit: "order",
+                image: "https://messages-prod.27c852f3500f38c1e7786e2c9ff9e48f.r2.cloudflarestorage.com/019c3222-ff0e-7e77-bd8b-5dfad5dfeefd/1770367830219-019c3223-ea5b-72af-9f83-ed3246fcfbfd.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=af634fe044bd071ab4c5d356fdace60f%2F20260206%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20260206T085030Z&X-Amz-Expires=3600&X-Amz-Signature=5184e6c77a4b909f9cca819ef0ab81faf24afd4977757aedbb8b23f387e8a059&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+                desc: "Boiled quail eggs coated with crispy orange batter."
+            },
+            {
+                id: 4,
+                name: "Fries",
+                price: 15,
+                unit: "cup",
+                image: "https://messages-prod.27c852f3500f38c1e7786e2c9ff9e48f.r2.cloudflarestorage.com/019c3228-4362-7e5e-b37b-90d8c54619b5/1770368076911-019c3228-bd16-7b4a-ad1f-9ecddf477a85.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=af634fe044bd071ab4c5d356fdace60f%2F20260206%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20260206T085437Z&X-Amz-Expires=3600&X-Amz-Signature=4fd8f04b738725d2508f7bd8453bc9629c365f2435e328c4c4017a9e9249db49&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+                desc: "Golden crispy potato fries. Cheese or BBQ flavor."
+            },
+            {
+                id: 5,
+                name: "Fish Flat",
+                price: 10,
+                unit: "cup",
+                image: "https://messages-prod.27c852f3500f38c1e7786e2c9ff9e48f.r2.cloudflarestorage.com/019c322a-548f-7719-9bf0-1bec455e0583/1770368365983-019c322b-2319-700f-8c1f-1197746ac1c4.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=af634fe044bd071ab4c5d356fdace60f%2F20260206%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20260206T085926Z&X-Amz-Expires=3600&X-Amz-Signature=5ffefa7086f1ceab3f1b121fa6495806e47849424f468a53a7fc3806c96ac3f3&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+                desc: "Flattened fish balls, deep fried to perfection."
+            },
+            {
+                id: 6,
+                name: "Cheese Stick",
+                price: 20,
+                unit: "cup",
+                image: "https://messages-prod.27c852f3500f38c1e7786e2c9ff9e48f.r2.cloudflarestorage.com/019c3233-71ed-7fe0-9546-fe75c94fb40d/1770368993471-019c3234-3f56-7202-8f5c-7ec81d9247a8.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=af634fe044bd071ab4c5d356fdace60f%2F20260206%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20260206T090953Z&X-Amz-Expires=3600&X-Amz-Signature=4fc886f5cff73c524d65164cf259b80508ad1308b980cc441e920743829b88d4&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+                desc: "Deep-fried cheese wrapped in crispy lumpia wrapper."
+            }
+        ];
+
+        // State
+        let cart = {};
+
+        // Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMenu();
+        });
+
+        // Render Menu
+        function renderMenu() {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = menuItems.map(item => `
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col food-card-hover transition-all duration-300 group">
+                    <div class="h-44 bg-gray-200 relative overflow-hidden">
+                        <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4 pt-10">
+                             <div class="absolute bottom-3 right-3 bg-white px-3 py-1 rounded-full text-sm font-bold text-orange-600 shadow-lg">
+                                ₱${item.price} <span class="text-[10px] font-normal text-gray-500">/${item.unit}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg text-gray-800 leading-tight">${item.name}</h3>
+                        </div>
+                        <p class="text-sm text-gray-500 mb-6 flex-1 line-clamp-2">${item.desc}</p>
+                        
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-dashed border-gray-200">
+                             <!-- Quantity Controls -->
+                            <div class="flex items-center bg-gray-50 rounded-lg p-1 border border-gray-200">
+                                <button onclick="updateQuantity(${item.id}, -1)" class="w-8 h-8 rounded bg-white text-gray-600 hover:text-red-600 shadow-sm flex items-center justify-center transition disabled:opacity-30 disabled:hover:text-gray-600" ${!cart[item.id] ? 'disabled' : ''}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                                    </svg>
+                                </button>
+                                <span class="w-8 text-center font-bold text-gray-800 text-sm" id="qty-${item.id}">
+                                    ${cart[item.id] ? cart[item.id].qty : 0}
+                                </span>
+                                <button onclick="updateQuantity(${item.id}, 1)" class="w-8 h-8 rounded bg-orange-500 text-white shadow-sm flex items-center justify-center hover:bg-orange-600 transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update Cart Logic
+        function updateQuantity(id, change) {
+            const item = menuItems.find(i => i.id === id);
+            
+            if (!cart[id]) {
+                if (change > 0) {
+                    cart[id] = { ...item, qty: 1 };
+                }
+            } else {
+                cart[id].qty += change;
+                if (cart[id].qty <= 0) {
+                    delete cart[id];
+                }
+            }
+
+            // Update Main Grid UI
+            const qtyElement = document.getElementById(`qty-${id}`);
+            if (qtyElement) {
+                qtyElement.innerText = cart[id] ? cart[id].qty : 0;
+                
+                // Toggle minus button
+                const minusBtn = qtyElement.previousElementSibling;
+                if (minusBtn) {
+                    minusBtn.disabled = !cart[id];
+                }
+            }
+
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotalElement = document.getElementById('cart-total');
+            const cartBadge = document.getElementById('cart-badge');
+            const checkoutBtn = document.getElementById('checkout-btn');
+
+            const items = Object.values(cart);
+            let total = 0;
+            let totalQty = 0;
+
+            if (items.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-full text-center text-gray-400 mt-10">
+                        <div class="bg-gray-100 p-4 rounded-full mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            </svg>
+                        </div>
+                        <p class="text-sm font-medium text-gray-500">Your cart is empty.</p>
+                        <button onclick="toggleCart()" class="mt-4 text-orange-600 text-sm font-bold hover:underline">Start Ordering</button>
+                    </div>
+                `;
+                checkoutBtn.disabled = true;
+                cartBadge.classList.add('scale-0');
+            } else {
+                cartItemsContainer.innerHTML = items.map(item => {
+                    const itemTotal = item.price * item.qty;
+                    total += itemTotal;
+                    totalQty += item.qty;
+                    return `
+                        <div class="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm border border-gray-200">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-14 h-14 rounded-md bg-gray-100 overflow-hidden flex-shrink-0">
+                                    <img src="${item.image}" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 text-sm">${item.name}</h4>
+                                    <p class="text-xs text-gray-500">₱${item.price} x ${item.qty}</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="font-bold text-gray-900">₱${itemTotal}</span>
+                                <div class="flex items-center mt-2 bg-gray-50 rounded border border-gray-200">
+                                    <button onclick="updateQuantity(${item.id}, -1)" class="px-2 py-0.5 text-gray-500 hover:text-red-600 hover:bg-gray-100 rounded-l transition">
+                                        -
+                                    </button>
+                                    <span class="px-1 text-xs font-bold text-gray-700 w-4 text-center">${item.qty}</span>
+                                    <button onclick="updateQuantity(${item.id}, 1)" class="px-2 py-0.5 text-gray-500 hover:text-green-600 hover:bg-gray-100 rounded-r transition">
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                checkoutBtn.disabled = false;
+                cartBadge.innerText = totalQty;
+                cartBadge.classList.remove('scale-0');
+            }
+
+            cartTotalElement.innerText = '₱' + total.toFixed(2);
+        }
+
+        // UI Toggles
+        function toggleCart() {
+            const sidebar = document.getElementById('cart-sidebar');
+            const overlay = document.getElementById('cart-overlay');
+            const body = document.body;
+            
+            if (sidebar.classList.contains('translate-x-full')) {
+                sidebar.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+                body.style.overflow = 'hidden'; // Prevent background scrolling
+            } else {
+                sidebar.classList.add('translate-x-full');
+                overlay.classList.add('hidden');
+                body.style.overflow = '';
+            }
+        }
+
+        function openCheckout() {
+            toggleCart(); // Close sidebar
+            const total = document.getElementById('cart-total').innerText;
+            document.getElementById('checkout-total').innerText = total;
+            document.getElementById('checkout-modal').classList.remove('hidden');
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkout-modal').classList.add('hidden');
+        }
+
+        // Checkout Logic
+        function handleOrder(e) {
+            e.preventDefault();
+            const name = document.getElementById('customer-name').value;
+            const phone = document.getElementById('customer-phone').value;
+            const items = Object.values(cart);
+            let total = 0;
+
+            // Generate Summary
+            let summary = `ORDER FOR RYAN'S STREET FOOD\n`;
+            summary += `---------------------------\n`;
+            summary += `Name: ${name}\n`;
+            summary += `Contact: ${phone}\n\n`;
+            summary += `ITEMS:\n`;
+            
+            items.forEach(item => {
+                const itemTotal = item.price * item.qty;
+                total += itemTotal;
+                summary += `• ${item.qty}x ${item.name} (₱${itemTotal})\n`;
+            });
+            
+            summary += `\n---------------------------\n`;
+            summary += `TOTAL: ₱${total.toFixed(2)}\n`;
+            summary += `Payment: GCash`;
+
+            document.getElementById('order-summary-text').value = summary;
+            
+            closeCheckout();
+            document.getElementById('success-modal').classList.remove('hidden');
+        }
+
+        function copyToClipboard() {
+            const copyText = document.getElementById("order-summary-text");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); /* For mobile devices */
+            navigator.clipboard.writeText(copyText.value).then(() => {
+                showToast();
+            });
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('opacity-0');
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+            }, 3000);
+        }
+
+        function resetApp() {
+            cart = {};
+            renderMenu(); // Reset card counters
+            updateCartUI(); // Reset cart UI
+            document.getElementById('success-modal').classList.add('hidden');
+            document.getElementById('order-form').reset();
+            window.scrollTo(0,0);
+        }
+
+    </script>
+</body>
+</html>
