@@ -31,6 +31,20 @@
             transform: translateY(-4px);
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #f97316;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="bg-orange-50 min-h-screen pb-24 text-gray-800">
@@ -71,7 +85,6 @@
         <!-- Menu Grid -->
         <div class="flex items-center justify-between mb-4 border-b border-gray-200 pb-2">
             <h3 class="text-lg font-bold text-gray-800">Menu</h3>
-            <!-- Updated count to 6 -->
             <span class="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">6 Items Available</span>
         </div>
         
@@ -151,11 +164,12 @@
                     </div>
 
                     <div class="mt-6">
-                        <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold shadow-md hover:bg-green-700 transition flex justify-center items-center">
-                            <span>Place Order</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <button type="submit" id="submit-order-btn" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold shadow-md hover:bg-green-700 transition flex justify-center items-center">
+                            <span id="submit-btn-text">Place Order</span>
+                            <svg id="submit-btn-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                             </svg>
+                            <div id="submit-spinner" class="spinner ml-2 hidden"></div>
                         </button>
                     </div>
                 </form>
@@ -171,8 +185,8 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
             </div>
-            <h3 class="text-2xl font-bold text-gray-800 mb-1">Order Ready!</h3>
-            <p class="text-gray-500 mb-4 text-sm">Please send this summary to Ryan.</p>
+            <h3 class="text-2xl font-bold text-gray-800 mb-1">Order Submitted!</h3>
+            <p class="text-gray-500 mb-4 text-sm">Your order has been saved. Please send this summary to Ryan.</p>
             
             <div class="bg-gray-100 rounded-lg p-3 mb-4 text-left border border-gray-200">
                 <p class="text-xs text-gray-500 mb-1 font-bold uppercase tracking-wider">Order Summary</p>
@@ -189,12 +203,34 @@
         </div>
     </div>
 
+    <!-- Error Modal -->
+    <div id="error-modal" class="fixed inset-0 bg-black/80 hidden z-[70] flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 text-center">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-1">Submission Failed</h3>
+            <p class="text-gray-500 mb-4 text-sm" id="error-message">Something went wrong. Please try again.</p>
+            <button onclick="closeErrorModal()" class="w-full bg-gray-200 text-gray-800 py-2 rounded-lg font-semibold hover:bg-gray-300 transition">Close</button>
+        </div>
+    </div>
+
     <!-- Notification Toast -->
     <div id="toast" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg text-sm transition-opacity duration-300 opacity-0 pointer-events-none z-[80]">
         Copied to clipboard!
     </div>
 
     <script>
+        // ============================================
+        // GOOGLE SHEETS CONFIGURATION
+        // ============================================
+        // IMPORTANT: Replace this URL with your Google Apps Script Web App URL
+        const GOOGLE_SCRIPT_URL = 'Yhttps://script.google.com/macros/s/AKfycbyjKq9U5gjhFQMguaNpYwwIzI6h4b9kkJQe4jArS76s2W5BeY7_8jqWOG5BD1xWVVL-/exec';
+        // Example: 'https://script.google.com/macros/s/AKfycbx.../exec'
+        // ============================================
+
         // Menu Data
         const menuItems = [
             {
@@ -400,7 +436,7 @@
             if (sidebar.classList.contains('translate-x-full')) {
                 sidebar.classList.remove('translate-x-full');
                 overlay.classList.remove('hidden');
-                body.style.overflow = 'hidden'; // Prevent background scrolling
+                body.style.overflow = 'hidden';
             } else {
                 sidebar.classList.add('translate-x-full');
                 overlay.classList.add('hidden');
@@ -409,7 +445,7 @@
         }
 
         function openCheckout() {
-            toggleCart(); // Close sidebar
+            toggleCart();
             const total = document.getElementById('cart-total').innerText;
             document.getElementById('checkout-total').innerText = total;
             document.getElementById('checkout-modal').classList.remove('hidden');
@@ -419,15 +455,43 @@
             document.getElementById('checkout-modal').classList.add('hidden');
         }
 
-        // Checkout Logic
-        function handleOrder(e) {
+        function closeErrorModal() {
+            document.getElementById('error-modal').classList.add('hidden');
+        }
+
+        // Checkout Logic with Google Sheets Integration
+        async function handleOrder(e) {
             e.preventDefault();
+            
+            const submitBtn = document.getElementById('submit-order-btn');
+            const submitBtnText = document.getElementById('submit-btn-text');
+            const submitBtnIcon = document.getElementById('submit-btn-icon');
+            const submitSpinner = document.getElementById('submit-spinner');
+            
+            // Disable button and show loading
+            submitBtn.disabled = true;
+            submitBtnText.textContent = 'Submitting...';
+            submitBtnIcon.classList.add('hidden');
+            submitSpinner.classList.remove('hidden');
+
             const name = document.getElementById('customer-name').value;
             const phone = document.getElementById('customer-phone').value;
             const items = Object.values(cart);
             let total = 0;
 
-            // Generate Summary
+            // Prepare order items for Google Sheets
+            const orderItems = items.map(item => {
+                const itemTotal = item.price * item.qty;
+                total += itemTotal;
+                return {
+                    name: item.name,
+                    quantity: item.qty,
+                    price: item.price,
+                    total: itemTotal
+                };
+            });
+
+            // Generate Summary for display
             let summary = `ORDER FOR RYAN'S STREET FOOD\n`;
             summary += `---------------------------\n`;
             summary += `Name: ${name}\n`;
@@ -436,7 +500,6 @@
             
             items.forEach(item => {
                 const itemTotal = item.price * item.qty;
-                total += itemTotal;
                 summary += `• ${item.qty}x ${item.name} (₱${itemTotal})\n`;
             });
             
@@ -444,16 +507,56 @@
             summary += `TOTAL: ₱${total.toFixed(2)}\n`;
             summary += `Payment: GCash`;
 
-            document.getElementById('order-summary-text').value = summary;
-            
-            closeCheckout();
-            document.getElementById('success-modal').classList.remove('hidden');
+            // Prepare data for Google Sheets
+            const orderData = {
+                timestamp: new Date().toISOString(),
+                customerName: name,
+                customerPhone: phone,
+                items: JSON.stringify(orderItems),
+                totalAmount: total.toFixed(2),
+                paymentMethod: 'GCash'
+            };
+
+            try {
+                // Send to Google Sheets
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Important for Google Apps Script
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                // Note: With 'no-cors', we can't read the response
+                // So we assume success if no error was thrown
+                
+                // Show success modal
+                document.getElementById('order-summary-text').value = summary;
+                closeCheckout();
+                document.getElementById('success-modal').classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Error submitting order:', error);
+                
+                // Show error modal
+                document.getElementById('error-message').textContent = 
+                    'Failed to submit order. Please check your internet connection and try again.';
+                closeCheckout();
+                document.getElementById('error-modal').classList.remove('hidden');
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtnText.textContent = 'Place Order';
+                submitBtnIcon.classList.remove('hidden');
+                submitSpinner.classList.add('hidden');
+            }
         }
 
         function copyToClipboard() {
             const copyText = document.getElementById("order-summary-text");
             copyText.select();
-            copyText.setSelectionRange(0, 99999); /* For mobile devices */
+            copyText.setSelectionRange(0, 99999);
             navigator.clipboard.writeText(copyText.value).then(() => {
                 showToast();
             });
@@ -469,8 +572,8 @@
 
         function resetApp() {
             cart = {};
-            renderMenu(); // Reset card counters
-            updateCartUI(); // Reset cart UI
+            renderMenu();
+            updateCartUI();
             document.getElementById('success-modal').classList.add('hidden');
             document.getElementById('order-form').reset();
             window.scrollTo(0,0);
