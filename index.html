@@ -212,6 +212,31 @@
         </div>
     </div>
 
+    <!-- Stock Error Modal (shown when stock is insufficient) -->
+    <div id="stock-error-modal" class="fixed inset-0 bg-black/70 hidden z-[70] flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 animate-fade-in">
+            <div class="flex items-center justify-center mb-4">
+                <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center border-4 border-orange-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2 text-center">Stock Update</h3>
+            <p class="text-gray-600 mb-4 text-sm text-center">Some items in your cart have limited stock:</p>
+            
+            <div id="stock-issues-list" class="bg-gray-50 rounded-lg p-4 mb-4 space-y-3 max-h-64 overflow-y-auto">
+                <!-- Stock issues will be inserted here -->
+            </div>
+            
+            <p class="text-xs text-gray-500 mb-4 text-center">Your cart has been updated. Please review and try again.</p>
+            
+            <button onclick="closeStockErrorModal()" class="w-full bg-orange-600 text-white py-3 rounded-lg font-bold hover:bg-orange-700 transition">
+                Update My Cart
+            </button>
+        </div>
+    </div>
+
     <!-- Checkout Modal -->
     <div id="checkout-modal" class="fixed inset-0 bg-black/70 hidden z-[60] flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden flex flex-col max-h-[90vh]">
@@ -313,7 +338,7 @@
         // ============================================
         // GOOGLE SHEETS CONFIGURATION
         // ============================================
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxunnoWeoFZBHbq_m6tQVUDT0qZFOXhXNLpr5-nKnKuOKWnbLjc1-CcsyZDgrYOzNft/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwQ2t-oXOJPQnXi3eyjxPMo2aqEPKECfIqdnwN1aoNIyQrgUocx0c6zhDP3Whyja2bn/exec';
         // ============================================
 
         // ============================================
@@ -504,6 +529,77 @@
 
         function closeStoreClosedModal() {
             document.getElementById('store-closed-modal').classList.add('hidden');
+        }
+
+        function showStockErrorModal(issues) {
+            const modal = document.getElementById('stock-error-modal');
+            const issuesList = document.getElementById('stock-issues-list');
+            
+            // Build issues list HTML
+            issuesList.innerHTML = issues.map(issue => {
+                if (issue.type === 'out_of_stock') {
+                    return `
+                        <div class="bg-white border-l-4 border-red-500 p-3 rounded shadow-sm">
+                            <div class="flex items-start">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600 mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                                <div class="flex-1">
+                                    <p class="font-bold text-gray-800 text-sm">${issue.name}</p>
+                                    <p class="text-xs text-red-600 font-semibold">SOLD OUT</p>
+                                    <p class="text-xs text-gray-500 mt-1">Removed from cart</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="bg-white border-l-4 border-orange-500 p-3 rounded shadow-sm">
+                            <div class="flex items-start">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-orange-600 mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                                <div class="flex-1">
+                                    <p class="font-bold text-gray-800 text-sm">${issue.name}</p>
+                                    <p class="text-xs text-orange-600 font-semibold">Limited Stock</p>
+                                    <p class="text-xs text-gray-600 mt-1">You wanted: <span class="font-bold">${issue.requested}</span></p>
+                                    <p class="text-xs text-gray-600">Available: <span class="font-bold text-green-600">${issue.available}</span></p>
+                                    <p class="text-xs text-gray-500 mt-1">Quantity updated to ${issue.available}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }).join('');
+            
+            // Update cart quantities based on issues
+            issues.forEach(issue => {
+                const menuItem = menuItems.find(m => m.name === issue.name);
+                if (!menuItem) return;
+                
+                if (issue.type === 'out_of_stock') {
+                    // Remove from cart
+                    delete cart[menuItem.id];
+                } else if (issue.type === 'insufficient') {
+                    // Update to available quantity
+                    if (cart[menuItem.id]) {
+                        cart[menuItem.id].qty = issue.available;
+                    }
+                }
+            });
+            
+            // Update UI
+            renderMenu();
+            updateCartUI();
+            
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeStockErrorModal() {
+            const modal = document.getElementById('stock-error-modal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
         }
 
         // ============================================
@@ -742,10 +838,23 @@
                     // Store is closed — close cart sidebar and show closed modal
                     toggleCart();
                     showStoreClosedModal();
-                } else {
-                    // Store is open — proceed to checkout
-                    openCheckout();
+                    return;
                 }
+                
+                // Check stock availability
+                checkoutBtnText.textContent = 'Verifying stock...';
+                const stockCheck = await verifyStockAvailability();
+                
+                if (!stockCheck.success) {
+                    // Stock issues found
+                    toggleCart();
+                    showStockErrorModal(stockCheck.issues);
+                    return;
+                }
+                
+                // Store is open and stock is available — proceed to checkout
+                openCheckout();
+                
             } catch (error) {
                 console.error('Error during checkout check:', error);
                 // On error, allow checkout (fail open)
@@ -759,6 +868,73 @@
                 if (Object.values(cart).length === 0) {
                     checkoutBtn.disabled = true;
                 }
+            }
+        }
+
+        // ============================================
+        // VERIFY STOCK AVAILABILITY
+        // ============================================
+        async function verifyStockAvailability() {
+            try {
+                // Fetch latest stock from Google Sheets
+                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getStock&t=' + Date.now());
+                const data = await response.json();
+                
+                if (!data.stock) {
+                    return { success: true }; // If can't verify, allow checkout
+                }
+                
+                const issues = [];
+                const cartItems = Object.values(cart);
+                
+                // Check each cart item against current stock
+                cartItems.forEach(cartItem => {
+                    const stockItem = data.stock.find(s => s.name === cartItem.name);
+                    
+                    if (!stockItem) {
+                        return; // Item not found in stock sheet, allow it
+                    }
+                    
+                    const availableStock = parseInt(stockItem.stock) || 0;
+                    
+                    if (availableStock === 0) {
+                        issues.push({
+                            name: cartItem.name,
+                            requested: cartItem.qty,
+                            available: 0,
+                            type: 'out_of_stock'
+                        });
+                    } else if (cartItem.qty > availableStock) {
+                        issues.push({
+                            name: cartItem.name,
+                            requested: cartItem.qty,
+                            available: availableStock,
+                            type: 'insufficient'
+                        });
+                    }
+                });
+                
+                if (issues.length > 0) {
+                    // Update local menu items with latest stock
+                    data.stock.forEach(item => {
+                        const menuItem = menuItems.find(m => m.name === item.name);
+                        if (menuItem) {
+                            menuItem.stock = parseInt(item.stock) || 0;
+                        }
+                    });
+                    
+                    // Re-render menu with updated stock
+                    renderMenu();
+                    updateCartUI();
+                    
+                    return { success: false, issues: issues };
+                }
+                
+                return { success: true };
+                
+            } catch (error) {
+                console.error('Error verifying stock:', error);
+                return { success: true }; // On error, allow checkout
             }
         }
 
@@ -809,6 +985,23 @@
                     submitSpinner.classList.add('hidden');
                     return;
                 }
+                
+                // Verify stock one more time before submitting
+                submitBtnText.textContent = 'Verifying stock...';
+                const stockCheck = await verifyStockAvailability();
+                
+                if (!stockCheck.success) {
+                    // Stock changed during checkout
+                    closeCheckout();
+                    showStockErrorModal(stockCheck.issues);
+                    // Reset button
+                    submitBtn.disabled = false;
+                    submitBtnText.textContent = 'Place Order';
+                    submitBtnIcon.classList.remove('hidden');
+                    submitSpinner.classList.add('hidden');
+                    return;
+                }
+                
             } catch (error) {
                 console.error('Error re-checking store status:', error);
                 // On error, allow submission (fail open)
