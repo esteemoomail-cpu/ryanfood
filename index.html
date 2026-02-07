@@ -122,14 +122,20 @@
         </div>
     </div>
 
-    <!-- Store Closed Banner -->
-    <div id="store-closed-banner" class="hidden bg-red-600 text-white py-3 px-4 text-center shadow-lg">
-        <div class="max-w-5xl mx-auto flex items-center justify-center space-x-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span class="font-bold">STORE CURRENTLY CLOSED</span>
-            <span class="hidden sm:inline">- Ordering is temporarily unavailable</span>
+    <!-- Store Closed Banner - Now a Modal -->
+    <div id="store-closed-banner" class="hidden fixed inset-0 bg-black/70 z-[60] flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-8 text-center animate-fade-in">
+            <div class="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6 border-4 border-red-200 pulse-border">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <h3 class="text-3xl font-bold text-gray-800 mb-3">STORE CURRENTLY CLOSED</h3>
+            <p class="text-gray-600 mb-2 text-base">We're not accepting orders at the moment.</p>
+            <p class="text-gray-500 mb-8 text-sm">Please check back later. You can still browse our menu!</p>
+            <button onclick="hideStoreClosedBanner()" class="w-full bg-red-600 text-white py-3 px-6 rounded-lg font-bold text-lg hover:bg-red-700 transition shadow-lg">
+                Got it
+            </button>
         </div>
     </div>
 
@@ -237,8 +243,8 @@
                             
                             <div class="bg-white p-3 rounded-lg border border-blue-200 text-center shadow-sm">
                                 <p class="text-xs text-gray-500 mb-1">Send Total Amount: <span id="checkout-total" class="font-bold text-blue-700">₱0.00</span></p>
-                                <p class="text-xl font-mono font-bold text-gray-800 tracking-wider">0917-123-4567</p>
-                                <p class="text-xs text-gray-400 mt-1">Account Name: Ryan S.</p>
+                                <p class="text-xl font-mono font-bold text-gray-800 tracking-wider">0995-827-3644</p>
+                                <p class="text-xs text-gray-400 mt-1">Account Name: <span class="font-bold text-blue-600">Mark James B.</span></p>
                             </div>
                             <p class="text-[10px] text-blue-600 mt-2 text-center">Please take a screenshot of your payment receipt.</p>
                         </div>
@@ -445,12 +451,18 @@
 
         function showStoreClosedBanner() {
             const banner = document.getElementById('store-closed-banner');
-            if (banner) banner.classList.remove('hidden');
+            if (banner) {
+                banner.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
         }
 
         function hideStoreClosedBanner() {
             const banner = document.getElementById('store-closed-banner');
-            if (banner) banner.classList.add('hidden');
+            if (banner) {
+                banner.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
         }
 
         function showStoreClosedModal() {
