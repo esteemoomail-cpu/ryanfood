@@ -52,11 +52,6 @@
             position: relative;
         }
 
-        header.compact-header {
-            padding-top: 0.5rem;
-            padding-bottom: 0.5rem;
-        }
-
         .spinner {
             border: 3px solid #f3f3f3;
             border-top: 3px solid #f97316;
@@ -79,24 +74,36 @@
         <div class="max-w-5xl mx-auto px-4 py-4">
             <div class="flex flex-col items-center space-y-3 w-full">
                 <img id="header-logo" src="Untitled_design.png" alt="Ryan's Logo" class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white shadow-2xl">
-                <div class="text-center">
+                <div class="text-center pb-2">
                     <h1 class="text-2xl md:text-3xl font-bold tracking-tight leading-none">Ryan's Filipino Street Food</h1>
                     <p class="text-red-100 text-sm md:text-base opacity-90 mt-1">Siomai, Kikiam, Kwek-kwek & More!</p>
                 </div>
             </div>
-            <div class="absolute top-4 right-4">
-            <div class="fixed top-4 right-4 z-[60]">
-                <div class="relative cursor-pointer hover:scale-105 transition-transform" onclick="toggleCart()">
-                    <div class="bg-gradient-to-br from-orange-500 to-red-600 p-3 rounded-full shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                    </div>
-                    <span id="cart-badge" class="absolute -top-1 -right-1 bg-yellow-400 text-red-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center transform scale-0 transition-transform duration-200 border-2 border-white shadow-md">0</span>
-                </div>
-            </div>
         </div>
     </header>
+
+    <!-- Fixed Cart Icon -->
+    <div class="fixed top-4 right-4 z-[60]">
+        <div class="relative cursor-pointer hover:scale-105 transition-transform" onclick="toggleCart()">
+            <div class="bg-gradient-to-br from-orange-500 to-red-600 p-3 rounded-full shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+            </div>
+            <span id="cart-badge" class="absolute -top-1 -right-1 bg-yellow-400 text-red-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center transform scale-0 transition-transform duration-200 border-2 border-white shadow-md">0</span>
+        </div>
+    </div>
+
+    <!-- Store Closed Banner -->
+    <div id="store-closed-banner" class="hidden bg-red-600 text-white py-3 px-4 text-center shadow-lg">
+        <div class="max-w-5xl mx-auto flex items-center justify-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="font-bold">STORE CURRENTLY CLOSED</span>
+            <span class="hidden sm:inline">- Ordering is temporarily unavailable</span>
+        </div>
+    </div>
 
     <!-- Main Content -->
     <main class="max-w-5xl mx-auto px-4 py-6">
@@ -255,7 +262,7 @@
         // GOOGLE SHEETS CONFIGURATION
         // ============================================
         // IMPORTANT: Replace this URL with your Google Apps Script Web App URL
-        const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwQ2t-oXOJPQnXi3eyjxPMo2aqEPKECfIqdnwN1aoNIyQrgUocx0c6zhDP3Whyja2bn/exec';
         // Example: 'https://script.google.com/macros/s/AKfycbx.../exec'
         // ============================================
 
@@ -270,13 +277,11 @@
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             
             if (scrollTop > lastScrollTop && scrollTop > 50) {
-                // Scrolling down - hide logo
+                // Scrolling down - hide logo only (not text)
                 logo.classList.add('hide-logo');
-                header.classList.add('compact-header');
             } else {
                 // Scrolling up - show logo
                 logo.classList.remove('hide-logo');
-                header.classList.remove('compact-header');
             }
             
             lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
@@ -336,11 +341,65 @@
 
         // State
         let cart = {};
+        let storeOpen = true; // Default to true
 
         // Initialization
         document.addEventListener('DOMContentLoaded', () => {
             renderMenu();
+            checkStoreStatus(); // Check if store is open
         });
+
+        // Check Store Status from Google Sheets
+        async function checkStoreStatus() {
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL);
+                const data = await response.json();
+                
+                if (data.storeClosed) {
+                    storeOpen = false;
+                    showStoreClosedBanner();
+                    disableOrdering();
+                } else {
+                    storeOpen = true;
+                    hideStoreClosedBanner();
+                    enableOrdering();
+                }
+            } catch (error) {
+                console.error('Error checking store status:', error);
+                // On error, allow ordering (fail open)
+                storeOpen = true;
+            }
+        }
+
+        // Show store closed banner
+        function showStoreClosedBanner() {
+            const banner = document.getElementById('store-closed-banner');
+            if (banner) {
+                banner.classList.remove('hidden');
+            }
+        }
+
+        // Hide store closed banner
+        function hideStoreClosedBanner() {
+            const banner = document.getElementById('store-closed-banner');
+            if (banner) {
+                banner.classList.add('hidden');
+            }
+        }
+
+        // Disable all ordering functionality
+        function disableOrdering() {
+            // Disable all add buttons
+            document.querySelectorAll('[onclick^="updateQuantity"]').forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+        }
+
+        // Enable ordering functionality
+        function enableOrdering() {
+            // This will be handled by normal renderMenu
+        }
 
         // Render Menu
         function renderMenu() {
@@ -386,6 +445,12 @@
 
         // Update Cart Logic
         function updateQuantity(id, change) {
+            // Check if store is closed
+            if (!storeOpen && change > 0) {
+                alert('Sorry, the store is currently closed. Please check back later!');
+                return;
+            }
+
             const item = menuItems.find(i => i.id === id);
             
             if (!cart[id]) {
@@ -514,6 +579,15 @@
         async function handleOrder(e) {
             e.preventDefault();
             
+            // Double-check store status before submitting
+            if (!storeOpen) {
+                document.getElementById('error-message').textContent = 
+                    'Sorry, the store is currently closed. Please try again later.';
+                closeCheckout();
+                document.getElementById('error-modal').classList.remove('hidden');
+                return;
+            }
+
             const submitBtn = document.getElementById('submit-order-btn');
             const submitBtnText = document.getElementById('submit-btn-text');
             const submitBtnIcon = document.getElementById('submit-btn-icon');
