@@ -10,7 +10,7 @@
         
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #fcf4ed; /* Warmer background */
+            background-color: #fcf4ed;
         }
         
         ::-webkit-scrollbar {
@@ -32,7 +32,6 @@
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
-        /* Logo hide/show animation */
         #header-logo {
             transition: all 0.3s ease-in-out;
             max-height: 200px;
@@ -59,11 +58,40 @@
             width: 24px;
             height: 24px;
             animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+
+        .spinner-white {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: 3px solid #ffffff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
         }
 
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { border-color: #ef4444; }
+            50% { border-color: #fbbf24; }
+        }
+
+        .pulse-border {
+            animation: pulse-border 2s ease-in-out infinite;
         }
     </style>
 </head>
@@ -154,8 +182,26 @@
                 <span class="text-gray-600">Total Amount</span>
                 <span id="cart-total" class="text-2xl font-bold text-orange-600">₱0.00</span>
             </div>
-            <button id="checkout-btn" onclick="openCheckout()" class="w-full bg-orange-600 text-white py-3 rounded-lg font-bold shadow-lg hover:bg-orange-700 transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100" disabled>
-                Proceed to Checkout
+            <button id="checkout-btn" onclick="handleCheckoutClick()" class="w-full bg-orange-600 text-white py-3 rounded-lg font-bold shadow-lg hover:bg-orange-700 transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 flex items-center justify-center" disabled>
+                <span id="checkout-btn-text">Proceed to Checkout</span>
+                <div id="checkout-spinner" class="spinner-white ml-2 hidden"></div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Store Closed Modal (shown when trying to checkout while closed) -->
+    <div id="store-closed-modal" class="fixed inset-0 bg-black/70 hidden z-[70] flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 text-center animate-fade-in">
+            <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-red-200 pulse-border">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">Store is Closed</h3>
+            <p class="text-gray-500 mb-2 text-sm">Sorry, we're not accepting orders right now.</p>
+            <p class="text-gray-400 mb-6 text-xs">Please check back later. Your cart items will be saved.</p>
+            <button onclick="closeStoreClosedModal()" class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition">
+                Got it
             </button>
         </div>
     </div>
@@ -165,7 +211,7 @@
         <div class="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden flex flex-col max-h-[90vh]">
             <div class="bg-gradient-to-r from-orange-500 to-red-600 p-4 text-white flex justify-between items-center shrink-0">
                 <h3 class="font-bold text-lg">Checkout</h3>
-                <button onclick="closeCheckout()" class="hover:text-red-100 transition">&times;</button>
+                <button onclick="closeCheckout()" class="hover:text-red-100 transition text-2xl leading-none">&times;</button>
             </div>
             <div class="p-6 overflow-y-auto">
                 <form id="order-form" onsubmit="handleOrder(event)">
@@ -214,7 +260,7 @@
 
     <!-- Success Modal -->
     <div id="success-modal" class="fixed inset-0 bg-black/80 hidden z-[70] flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 text-center animate-bounce-in">
+        <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 text-center animate-fade-in">
             <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -240,7 +286,7 @@
 
     <!-- Error Modal -->
     <div id="error-modal" class="fixed inset-0 bg-black/80 hidden z-[70] flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 text-center">
+        <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 text-center animate-fade-in">
             <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -261,9 +307,7 @@
         // ============================================
         // GOOGLE SHEETS CONFIGURATION
         // ============================================
-        // IMPORTANT: Replace this URL with your Google Apps Script Web App URL
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwQ2t-oXOJPQnXi3eyjxPMo2aqEPKECfIqdnwN1aoNIyQrgUocx0c6zhDP3Whyja2bn/exec';
-        // Example: 'https://script.google.com/macros/s/AKfycbx.../exec'
         // ============================================
 
         // ============================================
@@ -277,10 +321,8 @@
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             
             if (scrollTop > lastScrollTop && scrollTop > 50) {
-                // Scrolling down - hide logo only (not text)
                 logo.classList.add('hide-logo');
             } else {
-                // Scrolling up - show logo
                 logo.classList.remove('hide-logo');
             }
             
@@ -341,67 +383,87 @@
 
         // State
         let cart = {};
-        let storeOpen = true; // Default to true
+        let storeOpen = true;
+        let lastStoreCheck = 0;
+        const STORE_CHECK_COOLDOWN = 10000; // 10 seconds cooldown between checks
 
         // Initialization
         document.addEventListener('DOMContentLoaded', () => {
             renderMenu();
-            checkStoreStatus(); // Check if store is open
+            checkStoreStatus(); // Initial check on page load
         });
 
-        // Check Store Status from Google Sheets
+        // ============================================
+        // STORE STATUS CHECK (from Google Sheets)
+        // ============================================
         async function checkStoreStatus() {
             try {
-                const response = await fetch(GOOGLE_SCRIPT_URL);
+                const response = await fetch(GOOGLE_SCRIPT_URL + '?t=' + Date.now());
                 const data = await response.json();
                 
+                lastStoreCheck = Date.now();
+
                 if (data.storeClosed) {
                     storeOpen = false;
                     showStoreClosedBanner();
-                    disableOrdering();
                 } else {
                     storeOpen = true;
                     hideStoreClosedBanner();
-                    enableOrdering();
+                }
+                
+                return storeOpen;
+            } catch (error) {
+                console.error('Error checking store status:', error);
+                // On error, return current known state (don't change it)
+                return storeOpen;
+            }
+        }
+
+        // Fresh check — always fetches from Google Sheets
+        async function freshStoreCheck() {
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL + '?t=' + Date.now());
+                const data = await response.json();
+                
+                lastStoreCheck = Date.now();
+
+                if (data.storeClosed) {
+                    storeOpen = false;
+                    showStoreClosedBanner();
+                    return false; // store is closed
+                } else {
+                    storeOpen = true;
+                    hideStoreClosedBanner();
+                    return true; // store is open
                 }
             } catch (error) {
                 console.error('Error checking store status:', error);
-                // On error, allow ordering (fail open)
-                storeOpen = true;
+                // On network error, allow the action (fail open) but warn
+                return true;
             }
         }
 
-        // Show store closed banner
         function showStoreClosedBanner() {
             const banner = document.getElementById('store-closed-banner');
-            if (banner) {
-                banner.classList.remove('hidden');
-            }
+            if (banner) banner.classList.remove('hidden');
         }
 
-        // Hide store closed banner
         function hideStoreClosedBanner() {
             const banner = document.getElementById('store-closed-banner');
-            if (banner) {
-                banner.classList.add('hidden');
-            }
+            if (banner) banner.classList.add('hidden');
         }
 
-        // Disable all ordering functionality
-        function disableOrdering() {
-            // Disable all add buttons
-            document.querySelectorAll('[onclick^="updateQuantity"]').forEach(btn => {
-                btn.disabled = true;
-                btn.classList.add('opacity-50', 'cursor-not-allowed');
-            });
+        function showStoreClosedModal() {
+            document.getElementById('store-closed-modal').classList.remove('hidden');
         }
 
-        // Enable ordering functionality
-        function enableOrdering() {
-            // This will be handled by normal renderMenu
+        function closeStoreClosedModal() {
+            document.getElementById('store-closed-modal').classList.add('hidden');
         }
 
-        // Render Menu
+        // ============================================
+        // RENDER MENU
+        // ============================================
         function renderMenu() {
             const container = document.getElementById('menu-container');
             container.innerHTML = menuItems.map(item => `
@@ -421,7 +483,6 @@
                         <p class="text-sm text-gray-500 mb-6 flex-1 line-clamp-2">${item.desc}</p>
                         
                         <div class="flex items-center justify-between mt-auto pt-4 border-t border-dashed border-gray-200">
-                             <!-- Quantity Controls -->
                             <div class="flex items-center bg-gray-50 rounded-lg p-1 border border-gray-200">
                                 <button onclick="updateQuantity(${item.id}, -1)" class="w-8 h-8 rounded bg-white text-gray-600 hover:text-red-600 shadow-sm flex items-center justify-center transition disabled:opacity-30 disabled:hover:text-gray-600" ${!cart[item.id] ? 'disabled' : ''}>
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -443,14 +504,10 @@
             `).join('');
         }
 
-        // Update Cart Logic
+        // ============================================
+        // CART LOGIC
+        // ============================================
         function updateQuantity(id, change) {
-            // Check if store is closed
-            if (!storeOpen && change > 0) {
-                alert('Sorry, the store is currently closed. Please check back later!');
-                return;
-            }
-
             const item = menuItems.find(i => i.id === id);
             
             if (!cart[id]) {
@@ -464,12 +521,9 @@
                 }
             }
 
-            // Update Main Grid UI
             const qtyElement = document.getElementById(`qty-${id}`);
             if (qtyElement) {
                 qtyElement.innerText = cart[id] ? cart[id].qty : 0;
-                
-                // Toggle minus button
                 const minusBtn = qtyElement.previousElementSibling;
                 if (minusBtn) {
                     minusBtn.disabled = !cart[id];
@@ -543,7 +597,9 @@
             cartTotalElement.innerText = '₱' + total.toFixed(2);
         }
 
-        // UI Toggles
+        // ============================================
+        // UI TOGGLES
+        // ============================================
         function toggleCart() {
             const sidebar = document.getElementById('cart-sidebar');
             const overlay = document.getElementById('cart-overlay');
@@ -557,6 +613,47 @@
                 sidebar.classList.add('translate-x-full');
                 overlay.classList.add('hidden');
                 body.style.overflow = '';
+            }
+        }
+
+        // ============================================
+        // CHECKOUT CLICK — CHECK STORE STATUS FIRST
+        // ============================================
+        async function handleCheckoutClick() {
+            const checkoutBtn = document.getElementById('checkout-btn');
+            const checkoutBtnText = document.getElementById('checkout-btn-text');
+            const checkoutSpinner = document.getElementById('checkout-spinner');
+
+            // Disable button and show loading spinner
+            checkoutBtn.disabled = true;
+            checkoutBtnText.textContent = 'Checking store status...';
+            checkoutSpinner.classList.remove('hidden');
+
+            try {
+                // Always do a fresh check before proceeding to checkout
+                const isOpen = await freshStoreCheck();
+
+                if (!isOpen) {
+                    // Store is closed — close cart sidebar and show closed modal
+                    toggleCart();
+                    showStoreClosedModal();
+                } else {
+                    // Store is open — proceed to checkout
+                    openCheckout();
+                }
+            } catch (error) {
+                console.error('Error during checkout check:', error);
+                // On error, allow checkout (fail open)
+                openCheckout();
+            } finally {
+                // Reset button state
+                checkoutBtn.disabled = false;
+                checkoutBtnText.textContent = 'Proceed to Checkout';
+                checkoutSpinner.classList.add('hidden');
+                // Re-evaluate if button should be disabled (empty cart)
+                if (Object.values(cart).length === 0) {
+                    checkoutBtn.disabled = true;
+                }
             }
         }
 
@@ -575,19 +672,12 @@
             document.getElementById('error-modal').classList.add('hidden');
         }
 
-        // Checkout Logic with Google Sheets Integration
+        // ============================================
+        // ORDER SUBMISSION — DOUBLE-CHECK STORE STATUS
+        // ============================================
         async function handleOrder(e) {
             e.preventDefault();
             
-            // Double-check store status before submitting
-            if (!storeOpen) {
-                document.getElementById('error-message').textContent = 
-                    'Sorry, the store is currently closed. Please try again later.';
-                closeCheckout();
-                document.getElementById('error-modal').classList.remove('hidden');
-                return;
-            }
-
             const submitBtn = document.getElementById('submit-order-btn');
             const submitBtnText = document.getElementById('submit-btn-text');
             const submitBtnIcon = document.getElementById('submit-btn-icon');
@@ -595,16 +685,38 @@
             
             // Disable button and show loading
             submitBtn.disabled = true;
-            submitBtnText.textContent = 'Submitting...';
+            submitBtnText.textContent = 'Checking store...';
             submitBtnIcon.classList.add('hidden');
             submitSpinner.classList.remove('hidden');
+
+            // Double-check store status right before submitting
+            try {
+                const isOpen = await freshStoreCheck();
+                
+                if (!isOpen) {
+                    // Store closed between checkout open and order submit
+                    closeCheckout();
+                    showStoreClosedModal();
+                    // Reset button
+                    submitBtn.disabled = false;
+                    submitBtnText.textContent = 'Place Order';
+                    submitBtnIcon.classList.remove('hidden');
+                    submitSpinner.classList.add('hidden');
+                    return;
+                }
+            } catch (error) {
+                console.error('Error re-checking store status:', error);
+                // On error, allow submission (fail open)
+            }
+
+            // Update button text for submission phase
+            submitBtnText.textContent = 'Submitting...';
 
             const name = document.getElementById('customer-name').value;
             const phone = document.getElementById('customer-phone').value;
             const items = Object.values(cart);
             let total = 0;
 
-            // Prepare order items for Google Sheets
             const orderItems = items.map(item => {
                 const itemTotal = item.price * item.qty;
                 total += itemTotal;
@@ -616,7 +728,6 @@
                 };
             });
 
-            // Generate Summary for display
             let summary = `ORDER FOR RYAN'S STREET FOOD\n`;
             summary += `---------------------------\n`;
             summary += `Name: ${name}\n`;
@@ -632,7 +743,6 @@
             summary += `TOTAL: ₱${total.toFixed(2)}\n`;
             summary += `Payment: GCash`;
 
-            // Prepare data for Google Sheets
             const orderData = {
                 timestamp: new Date().toISOString(),
                 customerName: name,
@@ -643,20 +753,15 @@
             };
 
             try {
-                // Send to Google Sheets
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // Important for Google Apps Script
+                    mode: 'no-cors',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(orderData)
                 });
 
-                // Note: With 'no-cors', we can't read the response
-                // So we assume success if no error was thrown
-                
-                // Show success modal
                 document.getElementById('order-summary-text').value = summary;
                 closeCheckout();
                 document.getElementById('success-modal').classList.remove('hidden');
@@ -664,13 +769,11 @@
             } catch (error) {
                 console.error('Error submitting order:', error);
                 
-                // Show error modal
                 document.getElementById('error-message').textContent = 
                     'Failed to submit order. Please check your internet connection and try again.';
                 closeCheckout();
                 document.getElementById('error-modal').classList.remove('hidden');
             } finally {
-                // Reset button state
                 submitBtn.disabled = false;
                 submitBtnText.textContent = 'Place Order';
                 submitBtnIcon.classList.remove('hidden');
@@ -678,6 +781,9 @@
             }
         }
 
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
         function copyToClipboard() {
             const copyText = document.getElementById("order-summary-text");
             copyText.select();
@@ -703,6 +809,9 @@
             document.getElementById('order-form').reset();
             window.scrollTo(0,0);
         }
+
+        // Periodically re-check store status every 60 seconds
+        setInterval(checkStoreStatus, 60000);
 
     </script>
 </body>
