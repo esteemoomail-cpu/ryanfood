@@ -49,6 +49,7 @@
 
         header {
             transition: padding 0.3s ease-in-out;
+            position: relative;
         }
 
         header.compact-header {
@@ -75,21 +76,24 @@
 
     <!-- Header -->
     <header class="bg-gradient-to-r from-red-600 to-orange-600 text-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex flex-col items-center space-y-2">
-                <img id="header-logo" src="Untitled_design.png" alt="Ryan's Logo" class="w-20 h-20 md:w-24 md:h-24 rounded-full border-3 border-white shadow-xl">
+        <div class="max-w-5xl mx-auto px-4 py-4">
+            <div class="flex flex-col items-center space-y-3 w-full">
+                <img id="header-logo" src="Untitled_design.png" alt="Ryan's Logo" class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white shadow-2xl">
                 <div class="text-center">
-                    <h1 class="text-xl md:text-2xl font-bold tracking-tight leading-none">Ryan's Filipino Street Food</h1>
-                    <p class="text-red-100 text-xs opacity-90">Siomai, Kikiam, Kwek-kwek & More!</p>
+                    <h1 class="text-2xl md:text-3xl font-bold tracking-tight leading-none">Ryan's Filipino Street Food</h1>
+                    <p class="text-red-100 text-sm md:text-base opacity-90 mt-1">Siomai, Kikiam, Kwek-kwek & More!</p>
                 </div>
             </div>
-            <div class="relative cursor-pointer hover:scale-105 transition-transform" onclick="toggleCart()">
-                <div class="bg-white/20 p-2 rounded-full backdrop-blur-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
+            <div class="absolute top-4 right-4">
+            <div class="absolute top-4 right-4">
+                <div class="relative cursor-pointer hover:scale-105 transition-transform" onclick="toggleCart()">
+                    <div class="bg-white/20 p-2 rounded-full backdrop-blur-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <span id="cart-badge" class="absolute -top-1 -right-1 bg-yellow-400 text-red-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center transform scale-0 transition-transform duration-200 border border-white">0</span>
                 </div>
-                <span id="cart-badge" class="absolute -top-1 -right-1 bg-yellow-400 text-red-900 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center transform scale-0 transition-transform duration-200 border border-white">0</span>
             </div>
         </div>
     </header>
