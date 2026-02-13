@@ -3,7 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ryan's Filipino Street Food</title>
+    
+    <!-- Primary Meta Tags -->
+    <title>Ryan's Filipino Street Food - Siomai, Kikiam, Kwek-kwek & More!</title>
+    <meta name="title" content="Ryan's Filipino Street Food - Siomai, Kikiam, Kwek-kwek & More!">
+    <meta name="description" content="Craving authentic Filipino street food? Order your favorite siomai, kikiam, kwek-kwek, fries, and more! We accept GCash payments. Fresh and delicious street food delivered.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/">
+    <meta property="og:title" content="Ryan's Filipino Street Food - Siomai, Kikiam, Kwek-kwek & More!">
+    <meta property="og:description" content="Craving authentic Filipino street food? Order your favorite siomai, kikiam, kwek-kwek, fries, and more! We accept GCash payments.">
+    <meta property="og:image" content="https://yourwebsite.com/Untitled_design.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Ryan's Filipino Street Food Logo">
+    <meta property="og:site_name" content="Ryan's Filipino Street Food">
+    <meta property="og:locale" content="en_PH">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://yourwebsite.com/">
+    <meta property="twitter:title" content="Ryan's Filipino Street Food - Siomai, Kikiam, Kwek-kwek & More!">
+    <meta property="twitter:description" content="Craving authentic Filipino street food? Order your favorite siomai, kikiam, kwek-kwek, fries, and more! We accept GCash payments.">
+    <meta property="twitter:image" content="https://yourwebsite.com/Untitled_design.png">
+    
+    <!-- Additional Meta Tags -->
+    <meta name="keywords" content="Filipino street food, siomai, kikiam, kwek-kwek, street food Philippines, GCash payment, order food online">
+    <meta name="author" content="Ryan's Filipino Street Food">
+    <meta name="robots" content="index, follow">
+    
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
@@ -88,7 +117,7 @@
 <body class="bg-orange-50 min-h-screen pb-24 text-gray-800">
 
     <!-- Header -->
-    <header class="bg-gradient-to-r from-red-600 to-orange-600 text-white shadow-lg sticky top-0 z-50">
+    <header id="main-header" class="bg-gradient-to-r from-red-600 to-orange-600 text-white shadow-lg sticky top-0 z-50 transition-all duration-500">
         <div class="max-w-5xl mx-auto px-4 py-4">
             <div class="flex flex-col items-center space-y-3 w-full">
                 <img id="header-logo" src="Untitled_design.png" alt="Ryan's Logo" class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white shadow-2xl">
@@ -103,7 +132,7 @@
     <!-- Fixed Cart Icon -->
     <div class="fixed top-4 right-4 z-[60]">
         <div class="relative cursor-pointer hover:scale-105 transition-transform" onclick="toggleCart()">
-            <div class="bg-gradient-to-br from-orange-500 to-red-600 p-3 rounded-full shadow-lg">
+            <div id="cart-icon" class="bg-gradient-to-br from-orange-500 to-red-600 p-3 rounded-full shadow-lg transition-all duration-500">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
@@ -423,12 +452,29 @@
                 
                 lastStoreCheck = Date.now();
 
+                const header = document.getElementById('main-header');
+                const cartIcon = document.getElementById('cart-icon');
+
                 if (data.storeClosed) {
                     storeOpen = false;
                     showStoreClosedBanner();
+                    // Change to red gradient
+                    if (header) {
+                        header.className = 'bg-gradient-to-r from-red-700 to-red-500 text-white shadow-lg sticky top-0 z-50 transition-all duration-500';
+                    }
+                    if (cartIcon) {
+                        cartIcon.className = 'bg-gradient-to-br from-red-700 to-red-500 p-3 rounded-full shadow-lg transition-all duration-500';
+                    }
                 } else {
                     storeOpen = true;
                     hideStoreClosedBanner();
+                    // Change to orange gradient
+                    if (header) {
+                        header.className = 'bg-gradient-to-r from-red-600 to-orange-600 text-white shadow-lg sticky top-0 z-50 transition-all duration-500';
+                    }
+                    if (cartIcon) {
+                        cartIcon.className = 'bg-gradient-to-br from-orange-500 to-red-600 p-3 rounded-full shadow-lg transition-all duration-500';
+                    }
                     // Reset the dismissed flag when store reopens
                     if (!data.storeClosed && storeClosedBannerDismissed) {
                         storeClosedBannerDismissed = false;
@@ -477,13 +523,30 @@
                 
                 lastStoreCheck = Date.now();
 
+                const header = document.getElementById('main-header');
+                const cartIcon = document.getElementById('cart-icon');
+
                 if (data.storeClosed) {
                     storeOpen = false;
                     showStoreClosedBanner();
+                    // Change to red gradient
+                    if (header) {
+                        header.className = 'bg-gradient-to-r from-red-700 to-red-500 text-white shadow-lg sticky top-0 z-50 transition-all duration-500';
+                    }
+                    if (cartIcon) {
+                        cartIcon.className = 'bg-gradient-to-br from-red-700 to-red-500 p-3 rounded-full shadow-lg transition-all duration-500';
+                    }
                     return false; // store is closed
                 } else {
                     storeOpen = true;
                     hideStoreClosedBanner();
+                    // Change to orange gradient
+                    if (header) {
+                        header.className = 'bg-gradient-to-r from-red-600 to-orange-600 text-white shadow-lg sticky top-0 z-50 transition-all duration-500';
+                    }
+                    if (cartIcon) {
+                        cartIcon.className = 'bg-gradient-to-br from-orange-500 to-red-600 p-3 rounded-full shadow-lg transition-all duration-500';
+                    }
                     return true; // store is open
                 }
             } catch (error) {
