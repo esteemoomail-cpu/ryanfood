@@ -101,6 +101,19 @@
             animation: slideOut 0.3s ease-in forwards;
             overflow: hidden;
         }
+
+        .preset-btn {
+            transition: all 0.15s ease;
+        }
+        .preset-btn:active {
+            transform: scale(0.92);
+        }
+        .preset-btn-active {
+            background: linear-gradient(135deg, #f97316, #ea580c) !important;
+            color: white !important;
+            border-color: #ea580c !important;
+            box-shadow: 0 2px 8px rgba(249, 115, 22, 0.4);
+        }
     </style>
 </head>
 <body class="bg-orange-50 min-h-screen pb-24 text-gray-800">
@@ -212,7 +225,6 @@
                 <button onclick="closeCheckout()" class="hover:text-red-100 transition text-2xl leading-none">&times;</button>
             </div>
             <div class="p-6 overflow-y-auto">
-                <!-- Order Summary in Checkout -->
                 <div class="mb-6">
                     <h4 class="text-sm font-bold text-gray-700 mb-3 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
@@ -464,6 +476,67 @@
         }
         function closeStockErrorModal() { document.getElementById('stock-error-modal').classList.add('hidden'); document.body.style.overflow = ''; }
 
+        // ============================================
+        // PRESET QUANTITY HELPERS
+        // ============================================
+        function getPresetValues(stock) {
+            const candidates = [5, 10, stock];
+            const unique = [...new Set(candidates)].filter(v => v > 0 && v <= stock);
+            unique.sort((a, b) => a - b);
+            return unique.map(v => ({
+                value: v,
+                label: v === stock
+                    ? (v === 5 || v === 10 ? `${v} (Max)` : `Max (${v})`)
+                    : `${v}`
+            }));
+        }
+
+        function buildPresetButtonsHTML(itemId, stock, currentQty, context) {
+            if (stock < 3) return '';
+            const presets = getPresetValues(stock);
+            if (presets.length === 0) return '';
+
+            const isCard = context === 'card';
+            const btnSize = isCard ? 'text-[11px] px-3 py-1' : 'text-[10px] px-2.5 py-0.5';
+            const wrapClass = isCard ? 'mt-2.5 pt-2 border-t border-dotted border-gray-200' : 'mt-2';
+            const labelText = isCard ? 'Quick add:' : 'Qty:';
+
+            return `<div class="flex items-center gap-1.5 flex-wrap ${wrapClass}">
+                <span class="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">${labelText}</span>
+                ${presets.map(p => {
+                    const isActive = p.value === currentQty && currentQty > 0;
+                    return `<button onclick="setPresetQuantity(${itemId}, ${p.value})"
+                        class="preset-btn ${btnSize} rounded-full font-bold border
+                        ${isActive
+                            ? 'preset-btn-active'
+                            : 'bg-white text-gray-500 border-gray-200 hover:bg-orange-50 hover:text-orange-600 hover:border-orange-300 shadow-sm'
+                        }">${p.label}</button>`;
+                }).join('')}
+            </div>`;
+        }
+
+        function setPresetQuantity(id, qty) {
+            const item = menuItems.find(i => i.id === id);
+            if (!item) return;
+            if (qty > item.stock) qty = item.stock;
+            if (qty <= 0) {
+                delete cart[id];
+            } else {
+                if (!cart[id]) {
+                    cart[id] = { ...item, qty: qty };
+                } else {
+                    cart[id].qty = qty;
+                }
+            }
+            updateSingleCard(id);
+            updateCartUI();
+            updateCheckoutOrderItems();
+            showToastMessage(`${item.name} × ${qty} added`);
+        }
+
+        // ============================================
+        // HTML BUILDERS
+        // ============================================
         function buildBadgeHTML(item) {
             const currentQty = cart[item.id] ? cart[item.id].qty : 0;
             if (currentQty > 0) {
@@ -487,10 +560,13 @@
                     Sold Out
                 </button>`;
             } else if (currentQty === 0) {
-                return `<button onclick="updateQuantity(${item.id}, 1)" class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:from-orange-600 hover:to-red-500 active:scale-[0.97] transition-all duration-200 shadow-md btn-ripple group/add">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover/add:rotate-90 duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
-                    Add to Cart
-                </button>`;
+                return `<div>
+                    <button onclick="updateQuantity(${item.id}, 1)" class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:from-orange-600 hover:to-red-500 active:scale-[0.97] transition-all duration-200 shadow-md btn-ripple group/add">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover/add:rotate-90 duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
+                        Add to Cart
+                    </button>
+                    ${buildPresetButtonsHTML(item.id, item.stock, currentQty, 'card')}
+                </div>`;
             } else {
                 return `<div class="space-y-2">
                     <div class="flex items-center bg-orange-50 rounded-xl border-2 border-orange-300 overflow-hidden shadow-sm">
@@ -511,6 +587,7 @@
                         <span class="text-xs text-gray-400 font-medium" id="qtymul-${item.id}">${currentQty} × ₱${item.price}/${item.unit}</span>
                         <span class="text-sm font-bold text-orange-600" id="subtotal-${item.id}">₱${itemSubtotal}</span>
                     </div>
+                    ${buildPresetButtonsHTML(item.id, item.stock, currentQty, 'card')}
                 </div>`;
             }
         }
@@ -564,6 +641,9 @@
             }).join('');
         }
 
+        // ============================================
+        // CART LOGIC
+        // ============================================
         function setQuantityFromInput(id, inputEl) {
             const item = menuItems.find(i => i.id === id);
             let qty = parseInt(inputEl.value) || 0;
@@ -641,7 +721,7 @@
         }
 
         // ============================================
-        // REMOVE FROM CART (with animation)
+        // REMOVE FROM CART
         // ============================================
         function removeFromCart(id) {
             const cartItemEl = document.getElementById(`cart-item-${id}`);
@@ -666,7 +746,6 @@
             updateSingleCard(id);
             updateCartUI();
             updateCheckoutOrderItems();
-            // If cart is now empty, close checkout
             if (Object.keys(cart).length === 0) {
                 closeCheckout();
                 showToastMessage('Your cart is empty. Add items to order.');
@@ -674,7 +753,7 @@
         }
 
         // ============================================
-        // UPDATE CHECKOUT ORDER ITEMS
+        // CHECKOUT ORDER ITEMS
         // ============================================
         function updateCheckoutOrderItems() {
             const container = document.getElementById('checkout-order-items');
@@ -692,7 +771,7 @@
                     const itemTotal = item.price * item.qty;
                     total += itemTotal;
                     return `
-                        <div class="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2 border border-gray-100 group/checkout-item">
+                        <div class="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
                             <div class="flex items-center gap-2 flex-1 min-w-0">
                                 <div class="w-8 h-8 rounded bg-gray-200 overflow-hidden flex-shrink-0">
                                     <img src="${item.image}" class="w-full h-full object-cover">
@@ -716,6 +795,9 @@
             if (checkoutTotal) checkoutTotal.textContent = '₱' + total.toFixed(2);
         }
 
+        // ============================================
+        // CART UI
+        // ============================================
         function updateCartUI() {
             const cartItemsContainer = document.getElementById('cart-items');
             const cartTotalElement = document.getElementById('cart-total');
@@ -772,6 +854,7 @@
                                     </button>
                                 </div>
                             </div>
+                            ${buildPresetButtonsHTML(item.id, maxStock, item.qty, 'cart')}
                         </div>`;
                 }).join('');
                 checkoutBtn.disabled = false;
@@ -781,6 +864,9 @@
             cartTotalElement.innerText = '₱' + total.toFixed(2);
         }
 
+        // ============================================
+        // UI TOGGLES
+        // ============================================
         function handleOverlayClick(event) { if (event.target.id === 'cart-overlay') toggleCart(); }
 
         function toggleCart() {
@@ -793,6 +879,9 @@
             }
         }
 
+        // ============================================
+        // CHECKOUT
+        // ============================================
         async function handleCheckoutClick() {
             const checkoutBtn = document.getElementById('checkout-btn');
             const checkoutBtnText = document.getElementById('checkout-btn-text');
@@ -845,6 +934,9 @@
         function closeCheckout() { document.getElementById('checkout-modal').classList.add('hidden'); }
         function closeErrorModal() { document.getElementById('error-modal').classList.add('hidden'); }
 
+        // ============================================
+        // ORDER SUBMISSION
+        // ============================================
         async function handleOrder(e) {
             e.preventDefault();
             const submitBtn = document.getElementById('submit-order-btn');
@@ -895,6 +987,9 @@
             }
         }
 
+        // ============================================
+        // UTILITY
+        // ============================================
         function copyToClipboard() {
             const copyText = document.getElementById("order-summary-text");
             copyText.select(); copyText.setSelectionRange(0, 99999);
