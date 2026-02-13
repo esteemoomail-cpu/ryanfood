@@ -183,7 +183,7 @@
     </main>
 
     <!-- Cart Modal / Slide-over -->
-    <div id="cart-overlay" class="fixed inset-0 bg-black/50 hidden z-50 backdrop-blur-sm transition-opacity" onclick="toggleCart()"></div>
+    <div id="cart-overlay" class="fixed inset-0 bg-black/50 hidden z-50 backdrop-blur-sm transition-opacity" onclick="handleOverlayClick(event)"></div>
     <div id="cart-sidebar" class="fixed inset-y-0 right-0 max-w-sm w-full bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col">
         
         <!-- Cart Header -->
@@ -433,7 +433,6 @@
         let storeOpen = true;
         let lastStoreCheck = 0;
         let storeClosedBannerDismissed = false; // Track if user dismissed the banner
-        const STORE_CHECK_COOLDOWN = 1000; // 1 second cooldown between checks
 
         // Initialization
         document.addEventListener('DOMContentLoaded', () => {
@@ -738,6 +737,8 @@
                                     value="${currentQty}" 
                                     id="qty-${item.id}"
                                     onchange="setQuantity(${item.id}, this.value)"
+                                    onclick="event.stopPropagation()"
+                                    ontouchstart="event.stopPropagation()"
                                     class="w-12 text-center font-bold text-gray-800 text-sm bg-transparent border-0 focus:outline-none focus:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                     ${outOfStock ? 'disabled' : ''}
                                 />
@@ -895,6 +896,13 @@
         // ============================================
         // UI TOGGLES
         // ============================================
+        function handleOverlayClick(event) {
+            // Only close cart if clicking directly on the overlay, not on child elements
+            if (event.target.id === 'cart-overlay') {
+                toggleCart();
+            }
+        }
+
         function toggleCart() {
             const sidebar = document.getElementById('cart-sidebar');
             const overlay = document.getElementById('cart-overlay');
