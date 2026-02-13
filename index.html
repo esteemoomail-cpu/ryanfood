@@ -47,7 +47,7 @@
 
         .food-card-hover:hover {
             transform: translateY(-4px);
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
         #header-logo { max-height: 200px; opacity: 1; }
@@ -82,16 +82,14 @@
         .qty-input-field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         .qty-input-field:focus { box-shadow: inset 0 0 0 2px #f97316; }
 
-        .cart-qty-input {
-            -moz-appearance: textfield; -webkit-appearance: none; appearance: none;
-        }
+        .cart-qty-input { -moz-appearance: textfield; -webkit-appearance: none; appearance: none; }
         .cart-qty-input::-webkit-outer-spin-button,
         .cart-qty-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
         .btn-ripple { position: relative; overflow: hidden; }
         .btn-ripple::after {
             content: ''; position: absolute; inset: 0;
-            background: radial-gradient(circle at var(--ripple-x,50%) var(--ripple-y,50%), rgba(255,255,255,0.3) 0%, transparent 60%);
+            background: radial-gradient(circle at var(--ripple-x, 50%) var(--ripple-y, 50%), rgba(255,255,255,0.3) 0%, transparent 60%);
             opacity: 0; transition: opacity 0.3s;
         }
         .btn-ripple:active::after { opacity: 1; }
@@ -125,9 +123,7 @@
     <div id="store-closed-banner" class="hidden fixed inset-0 bg-black/70 z-[60] flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-8 text-center animate-fade-in">
             <div class="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6 border-4 border-red-200 pulse-border">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             </div>
             <h3 class="text-3xl font-bold text-gray-800 mb-3">STORE CURRENTLY CLOSED</h3>
             <p class="text-gray-600 mb-2 text-base">We're not accepting orders at the moment.</p>
@@ -158,9 +154,7 @@
         <div class="bg-gray-900 text-white p-4 flex justify-between items-center shadow-md">
             <h2 class="text-lg font-bold flex items-center"><span class="mr-2">🛒</span> Your Order</h2>
             <button onclick="toggleCart()" class="p-1 hover:bg-gray-700 rounded-full transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
         </div>
         <div id="cart-items" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50"></div>
@@ -179,9 +173,7 @@
     <div id="store-closed-modal" class="fixed inset-0 bg-black/70 hidden z-[70] flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 text-center animate-fade-in">
             <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-red-200 pulse-border">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>
             </div>
             <h3 class="text-2xl font-bold text-gray-800 mb-2">Store is Closed</h3>
             <p class="text-gray-500 mb-2 text-sm">Sorry, we're not accepting orders right now.</p>
@@ -194,9 +186,7 @@
         <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 animate-fade-in">
             <div class="flex items-center justify-center mb-4">
                 <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center border-4 border-orange-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
                 </div>
             </div>
             <h3 class="text-2xl font-bold text-gray-800 mb-2 text-center">Stock Update</h3>
@@ -242,9 +232,7 @@
                     <div class="mt-6">
                         <button type="submit" id="submit-order-btn" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold shadow-md hover:bg-green-700 transition flex justify-center items-center">
                             <span id="submit-btn-text">Place Order</span>
-                            <svg id="submit-btn-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                            </svg>
+                            <svg id="submit-btn-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                             <div id="submit-spinner" class="spinner ml-2 hidden"></div>
                         </button>
                     </div>
@@ -256,9 +244,7 @@
     <div id="success-modal" class="fixed inset-0 bg-black/80 hidden z-[70] flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 text-center animate-fade-in">
             <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
             </div>
             <h3 class="text-2xl font-bold text-gray-800 mb-1">Order Submitted!</h3>
             <p class="text-gray-500 mb-4 text-sm">Your order has been saved. Please send this summary to Ryan.</p>
@@ -267,9 +253,7 @@
                 <textarea id="order-summary-text" class="w-full bg-white border border-gray-300 rounded p-2 text-xs font-mono h-32 focus:outline-none resize-none" readonly></textarea>
             </div>
             <button onclick="copyToClipboard()" id="copy-btn" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold hover:bg-blue-700 transition mb-2 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
                 Copy Order
             </button>
             <button onclick="resetApp()" class="w-full bg-gray-200 text-gray-800 py-2 rounded-lg font-semibold hover:bg-gray-300 transition">Close</button>
@@ -279,9 +263,7 @@
     <div id="error-modal" class="fixed inset-0 bg-black/80 hidden z-[70] flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 text-center animate-fade-in">
             <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
             </div>
             <h3 class="text-2xl font-bold text-gray-800 mb-1">Submission Failed</h3>
             <p class="text-gray-500 mb-4 text-sm" id="error-message">Something went wrong. Please try again.</p>
@@ -309,10 +291,12 @@
         let storeOpen = true;
         let lastStoreCheck = 0;
         let storeClosedBannerDismissed = false;
+        let pendingRender = false; // flag: stock changed while input was focused
+
         let longPressTimer = null;
         let longPressInterval = null;
         let longPressActive = false;
-        let menuRendered = false;
+        let longPressItemId = null;
 
         document.addEventListener('mouseup', stopLongPress);
         document.addEventListener('touchend', stopLongPress);
@@ -320,10 +304,19 @@
         document.addEventListener('contextmenu', function(e) { if (longPressActive) e.preventDefault(); });
 
         document.addEventListener('DOMContentLoaded', () => {
-            renderMenuFull();
+            renderMenu();
             checkStoreStatus();
             fetchMenuStock();
         });
+
+        // ============================================
+        // CHECK IF ANY QTY INPUT IS FOCUSED
+        // ============================================
+        function isAnyInputFocused() {
+            const el = document.activeElement;
+            if (!el) return false;
+            return el.classList.contains('qty-input-field') || el.classList.contains('cart-qty-input');
+        }
 
         // ============================================
         // LONG PRESS HANDLERS
@@ -331,9 +324,12 @@
         function startLongPress(id, change) {
             stopLongPress();
             longPressActive = true;
+            longPressItemId = id;
             updateQuantity(id, change);
             longPressTimer = setTimeout(() => {
-                longPressInterval = setInterval(() => { updateQuantity(id, change); }, 80);
+                longPressInterval = setInterval(() => {
+                    updateQuantity(id, change);
+                }, 80);
             }, 400);
         }
 
@@ -342,8 +338,10 @@
             if (longPressInterval) { clearInterval(longPressInterval); longPressInterval = null; }
             if (longPressActive) {
                 longPressActive = false;
-                // Do a targeted update for all items to sync button states
-                menuItems.forEach(item => updateCardUI(item.id));
+                if (longPressItemId !== null) {
+                    updateSingleCard(longPressItemId);
+                    longPressItemId = null;
+                }
                 updateCartUI();
             }
         }
@@ -356,7 +354,7 @@
                 const response = await fetch(GOOGLE_SCRIPT_URL + '?t=' + Date.now());
                 const data = await response.json();
                 lastStoreCheck = Date.now();
-                applyStoreStatus(data.storeClosed);
+                applyStoreState(data.storeClosed);
                 return storeOpen;
             } catch (error) { console.error('Error checking store status:', error); return storeOpen; }
         }
@@ -366,12 +364,12 @@
                 const response = await fetch(GOOGLE_SCRIPT_URL + '?t=' + Date.now());
                 const data = await response.json();
                 lastStoreCheck = Date.now();
-                applyStoreStatus(data.storeClosed);
+                applyStoreState(data.storeClosed);
                 return storeOpen;
             } catch (error) { console.error('Error checking store status:', error); return true; }
         }
 
-        function applyStoreStatus(isClosed) {
+        function applyStoreState(isClosed) {
             const header = document.getElementById('main-header');
             const cartIcon = document.getElementById('cart-icon');
             if (isClosed) {
@@ -393,27 +391,34 @@
                 const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getStock&t=' + Date.now());
                 const data = await response.json();
                 if (data.stock) {
-                    let needsFullRender = false;
                     data.stock.forEach(item => {
                         const menuItem = menuItems.find(m => m.name === item.name);
-                        if (menuItem) {
-                            const newStock = parseInt(item.stock) || 0;
-                            const oldStock = menuItem.stock;
-                            menuItem.stock = newStock;
-                            // Check if stock status changed (in stock <-> out of stock)
-                            if ((oldStock <= 0) !== (newStock <= 0)) needsFullRender = true;
-                        }
+                        if (menuItem) menuItem.stock = parseInt(item.stock) || 0;
                     });
-                    if (needsFullRender) {
-                        renderMenuFull();
+                    // If an input is focused, defer the full re-render
+                    if (isAnyInputFocused()) {
+                        pendingRender = true;
                     } else {
-                        // Just update stock displays and button states
-                        menuItems.forEach(item => updateStockDisplay(item.id));
+                        renderMenu();
+                        updateCartUI();
                     }
-                    updateCartUI();
                 }
             } catch (error) { console.error('Error fetching menu stock:', error); }
         }
+
+        // Listen for blur on the document to flush pending renders
+        document.addEventListener('focusout', function(e) {
+            if (e.target.classList.contains('qty-input-field') || e.target.classList.contains('cart-qty-input')) {
+                if (pendingRender) {
+                    pendingRender = false;
+                    // Small delay so the blur/setQuantity finishes first
+                    setTimeout(() => {
+                        renderMenu();
+                        updateCartUI();
+                    }, 50);
+                }
+            }
+        });
 
         function showStoreClosedBanner() {
             if (storeClosedBannerDismissed) return;
@@ -443,7 +448,7 @@
                 if (issue.type === 'out_of_stock') { delete cart[menuItem.id]; }
                 else if (issue.type === 'insufficient') { if (cart[menuItem.id]) cart[menuItem.id].qty = issue.available; }
             });
-            renderMenuFull();
+            renderMenu();
             updateCartUI();
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
@@ -451,164 +456,20 @@
         function closeStockErrorModal() { document.getElementById('stock-error-modal').classList.add('hidden'); document.body.style.overflow = ''; }
 
         // ============================================
-        // FULL RENDER (only on init or major changes)
+        // HTML BUILDERS
         // ============================================
-        function renderMenuFull() {
-            const container = document.getElementById('menu-container');
-            const availableCount = menuItems.filter(item => item.stock > 0).length;
-            const countBadge = document.getElementById('items-available-badge');
-            if (countBadge) countBadge.textContent = `${availableCount} Items Available`;
-
-            container.innerHTML = menuItems.map(item => {
-                const outOfStock = item.stock <= 0;
-                const lowStock = item.stock > 0 && item.stock <= 10;
-                const currentQty = cart[item.id] ? cart[item.id].qty : 0;
-
-                return `
-                <div id="card-${item.id}" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col food-card-hover transition-all duration-300 group ${outOfStock ? 'opacity-60' : ''}">
-                    <div class="h-44 bg-gray-200 relative overflow-hidden">
-                        <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500 ${outOfStock ? 'grayscale' : ''}" loading="lazy">
-                        ${outOfStock ? `<div class="absolute inset-0 bg-black/60 flex items-center justify-center"><div class="bg-red-600 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg">SOLD OUT</div></div>` : ''}
-                        <div id="cart-badge-${item.id}" class="absolute top-3 right-3 bg-orange-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-lg items-center gap-1 ${currentQty > 0 ? 'flex' : 'hidden'}">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                            </svg>
-                            <span id="cart-badge-qty-${item.id}">${currentQty}</span>
-                        </div>
-                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4 pt-10">
-                            <div class="absolute bottom-3 right-3 bg-white px-3 py-1 rounded-full text-sm font-bold text-orange-600 shadow-lg">
-                                ₱${item.price} <span class="text-[10px] font-normal text-gray-500">/${item.unit}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-5 flex-1 flex flex-col">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="font-bold text-lg text-gray-800 leading-tight">${item.name}</h3>
-                        </div>
-                        <p class="text-sm text-gray-500 mb-3 flex-1 line-clamp-2">${item.desc}</p>
-                        <div id="stock-display-${item.id}" class="mb-4">
-                            ${getStockHTML(item)}
-                        </div>
-                        <div class="mt-auto pt-4 border-t border-dashed border-gray-200">
-                            <div id="qty-section-${item.id}">
-                                ${getQtySectionHTML(item)}
-                            </div>
-                        </div>
-                    </div>
+        function buildBadgeHTML(item) {
+            const currentQty = cart[item.id] ? cart[item.id].qty : 0;
+            if (currentQty > 0) {
+                return `<div class="absolute top-3 right-3 bg-orange-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-lg flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                    ${currentQty}
                 </div>`;
-            }).join('');
-
-            menuRendered = true;
+            }
+            return '';
         }
 
-        // ============================================
-        // TARGETED UI UPDATES (no full re-render)
-        // ============================================
-        function updateCardUI(id) {
-            const item = menuItems.find(i => i.id === id);
-            if (!item || !menuRendered) return;
-
-            const currentQty = cart[id] ? cart[id].qty : 0;
-
-            // Update cart badge on image
-            const badgeEl = document.getElementById(`cart-badge-${id}`);
-            const badgeQtyEl = document.getElementById(`cart-badge-qty-${id}`);
-            if (badgeEl && badgeQtyEl) {
-                if (currentQty > 0) {
-                    badgeEl.classList.remove('hidden');
-                    badgeEl.classList.add('flex');
-                    badgeQtyEl.textContent = currentQty;
-                } else {
-                    badgeEl.classList.add('hidden');
-                    badgeEl.classList.remove('flex');
-                }
-            }
-
-            // Update quantity section
-            const qtySection = document.getElementById(`qty-section-${id}`);
-            if (qtySection) {
-                const newHTML = getQtySectionHTML(item);
-                // Only update if the structural state changed (e.g., 0 -> has qty, or has qty -> 0)
-                const prevQty = parseInt(qtySection.dataset.qty || '0');
-                const structureChanged = (prevQty === 0 && currentQty > 0) || (prevQty > 0 && currentQty === 0);
-                
-                if (structureChanged) {
-                    qtySection.innerHTML = newHTML;
-                } else if (currentQty > 0) {
-                    // Just update values in place
-                    const qtyInput = document.getElementById(`qty-${id}`);
-                    if (qtyInput && document.activeElement !== qtyInput) {
-                        qtyInput.value = currentQty;
-                        qtyInput.max = item.stock;
-                    }
-                    const subtotalEl = document.getElementById(`subtotal-${id}`);
-                    if (subtotalEl) subtotalEl.textContent = `₱${currentQty * item.price}`;
-                    const qtyMulEl = document.getElementById(`qtymul-${id}`);
-                    if (qtyMulEl) qtyMulEl.textContent = `${currentQty} × ₱${item.price}/${item.unit}`;
-                    
-                    // Update plus button state
-                    const atMax = currentQty >= item.stock;
-                    const plusBtn = document.getElementById(`plus-btn-${id}`);
-                    if (plusBtn) {
-                        plusBtn.disabled = atMax;
-                        if (atMax) {
-                            plusBtn.className = 'qty-btn w-12 h-12 flex items-center justify-center transition-all duration-150 flex-shrink-0 opacity-30 cursor-not-allowed bg-gray-50';
-                            plusBtn.querySelector('svg').className.baseVal = 'h-6 w-6 text-gray-400';
-                            plusBtn.removeAttribute('onmousedown');
-                            plusBtn.removeAttribute('ontouchstart');
-                        } else {
-                            plusBtn.className = 'qty-btn w-12 h-12 flex items-center justify-center transition-all duration-150 flex-shrink-0 bg-green-50 hover:bg-green-100 active:bg-green-200';
-                            plusBtn.querySelector('svg').className.baseVal = 'h-6 w-6 text-green-600';
-                            plusBtn.setAttribute('onmousedown', `startLongPress(${id}, 1)`);
-                            plusBtn.setAttribute('ontouchstart', `startLongPress(${id}, 1)`);
-                        }
-                    }
-                    
-                    // Update minus button icon (trash vs minus)
-                    const minusBtn = document.getElementById(`minus-btn-${id}`);
-                    if (minusBtn) {
-                        if (currentQty === 1) {
-                            minusBtn.className = 'qty-btn w-12 h-12 flex items-center justify-center transition-all duration-150 flex-shrink-0 bg-red-50 hover:bg-red-100 active:bg-red-200';
-                            minusBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>`;
-                        } else {
-                            minusBtn.className = 'qty-btn w-12 h-12 flex items-center justify-center transition-all duration-150 flex-shrink-0 hover:bg-orange-100 active:bg-orange-200';
-                            minusBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>`;
-                        }
-                    }
-                }
-                qtySection.dataset.qty = currentQty;
-            }
-        }
-
-        function updateStockDisplay(id) {
-            const item = menuItems.find(i => i.id === id);
-            if (!item) return;
-            const el = document.getElementById(`stock-display-${id}`);
-            if (el) el.innerHTML = getStockHTML(item);
-            
-            const countBadge = document.getElementById('items-available-badge');
-            if (countBadge) {
-                const availableCount = menuItems.filter(i => i.stock > 0).length;
-                countBadge.textContent = `${availableCount} Items Available`;
-            }
-        }
-
-        // ============================================
-        // HTML GENERATORS
-        // ============================================
-        function getStockHTML(item) {
-            const outOfStock = item.stock <= 0;
-            const lowStock = item.stock > 0 && item.stock <= 10;
-            if (outOfStock) {
-                return `<div class="flex items-center text-red-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg><span class="text-xs font-bold">Out of Stock</span></div>`;
-            } else if (lowStock) {
-                return `<div class="flex items-center text-orange-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg><span class="text-xs font-bold">Only ${item.stock} left!</span></div>`;
-            } else {
-                return `<div class="flex items-center text-green-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-xs font-bold">In Stock (${item.stock} available)</span></div>`;
-            }
-        }
-
-        function getQtySectionHTML(item) {
+        function buildQtySectionHTML(item) {
             const outOfStock = item.stock <= 0;
             const currentQty = cart[item.id] ? cart[item.id].qty : 0;
             const itemSubtotal = currentQty * item.price;
@@ -617,30 +478,26 @@
             if (outOfStock && currentQty === 0) {
                 return `<button disabled class="w-full bg-gray-200 text-gray-400 py-3 rounded-xl font-bold flex items-center justify-center gap-2 cursor-not-allowed">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>
-                    Sold Out</button>`;
+                    Sold Out
+                </button>`;
             } else if (currentQty === 0) {
                 return `<button onclick="updateQuantity(${item.id}, 1)" class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:from-orange-600 hover:to-red-500 active:scale-[0.97] transition-all duration-200 shadow-md btn-ripple group/add">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover/add:rotate-90 duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
-                    Add to Cart</button>`;
+                    Add to Cart
+                </button>`;
             } else {
                 return `<div class="space-y-2">
                     <div class="flex items-center bg-orange-50 rounded-xl border-2 border-orange-300 overflow-hidden shadow-sm">
-                        <button id="minus-btn-${item.id}"
-                            onmousedown="startLongPress(${item.id}, -1)" ontouchstart="startLongPress(${item.id}, -1)" oncontextmenu="return false"
+                        <button onmousedown="startLongPress(${item.id}, -1)" ontouchstart="startLongPress(${item.id}, -1)" oncontextmenu="return false"
                             class="qty-btn w-12 h-12 flex items-center justify-center transition-all duration-150 flex-shrink-0 ${currentQty === 1 ? 'bg-red-50 hover:bg-red-100 active:bg-red-200' : 'hover:bg-orange-100 active:bg-orange-200'}">
-                            ${currentQty === 1
-                                ? `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>`
-                                : `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>`
-                            }
+                            ${currentQty === 1 ? `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>`
+                            : `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>`}
                         </button>
                         <input type="number" inputmode="numeric" min="0" max="${item.stock}" value="${currentQty}" id="qty-${item.id}"
-                            onfocus="this.select()" onchange="setQuantity(${item.id}, this.value)" onblur="setQuantity(${item.id}, this.value)" onkeydown="if(event.key==='Enter'){this.blur()}"
+                            onfocus="this.select()" onchange="setQuantityFromInput(${item.id}, this)" onblur="setQuantityFromInput(${item.id}, this)" onkeydown="if(event.key==='Enter'){this.blur()}"
                             class="qty-input-field w-full h-12 text-center font-bold text-xl text-gray-800 bg-white border-x-2 border-orange-300 focus:outline-none focus:bg-orange-50 transition-colors" />
-                        <button id="plus-btn-${item.id}"
-                            ${!atMax ? `onmousedown="startLongPress(${item.id}, 1)" ontouchstart="startLongPress(${item.id}, 1)"` : ''}
-                            oncontextmenu="return false"
-                            class="qty-btn w-12 h-12 flex items-center justify-center transition-all duration-150 flex-shrink-0 ${atMax ? 'opacity-30 cursor-not-allowed bg-gray-50' : 'bg-green-50 hover:bg-green-100 active:bg-green-200'}"
-                            ${atMax ? 'disabled' : ''}>
+                        <button onmousedown="${!atMax ? `startLongPress(${item.id}, 1)` : ''}" ontouchstart="${!atMax ? `startLongPress(${item.id}, 1)` : ''}" oncontextmenu="return false"
+                            class="qty-btn w-12 h-12 flex items-center justify-center transition-all duration-150 flex-shrink-0 ${atMax ? 'opacity-30 cursor-not-allowed bg-gray-50' : 'bg-green-50 hover:bg-green-100 active:bg-green-200'}" ${atMax ? 'disabled' : ''}>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ${atMax ? 'text-gray-400' : 'text-green-600'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
                         </button>
                     </div>
@@ -653,8 +510,97 @@
         }
 
         // ============================================
+        // UPDATE SINGLE CARD (no full re-render)
+        // ============================================
+        function updateSingleCard(itemId) {
+            const item = menuItems.find(i => i.id === itemId);
+            if (!item) return;
+            const qtyContainer = document.getElementById(`qty-section-${itemId}`);
+            if (qtyContainer) qtyContainer.innerHTML = buildQtySectionHTML(item);
+            const badgeContainer = document.getElementById(`card-badge-${itemId}`);
+            if (badgeContainer) badgeContainer.innerHTML = buildBadgeHTML(item);
+        }
+
+        // ============================================
+        // FULL RENDER (only on init & stock updates)
+        // ============================================
+        function renderMenu() {
+            const container = document.getElementById('menu-container');
+            const availableCount = menuItems.filter(item => item.stock > 0).length;
+            const countBadge = document.getElementById('items-available-badge');
+            if (countBadge) countBadge.textContent = `${availableCount} Items Available`;
+
+            container.innerHTML = menuItems.map(item => {
+                const outOfStock = item.stock <= 0;
+                const lowStock = item.stock > 0 && item.stock <= 10;
+
+                return `
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col food-card-hover transition-all duration-300 group ${outOfStock ? 'opacity-60' : ''}">
+                    <div class="h-44 bg-gray-200 relative overflow-hidden">
+                        <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500 ${outOfStock ? 'grayscale' : ''}">
+                        ${outOfStock ? `<div class="absolute inset-0 bg-black/60 flex items-center justify-center"><div class="bg-red-600 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg">SOLD OUT</div></div>` : ''}
+                        <div id="card-badge-${item.id}">${buildBadgeHTML(item)}</div>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4 pt-10">
+                            <div class="absolute bottom-3 right-3 bg-white px-3 py-1 rounded-full text-sm font-bold text-orange-600 shadow-lg">
+                                ₱${item.price} <span class="text-[10px] font-normal text-gray-500">/${item.unit}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg text-gray-800 leading-tight">${item.name}</h3>
+                        </div>
+                        <p class="text-sm text-gray-500 mb-3 flex-1 line-clamp-2">${item.desc}</p>
+                        <div class="mb-4">
+                            ${outOfStock ? `<div class="flex items-center text-red-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg><span class="text-xs font-bold">Out of Stock</span></div>`
+                            : lowStock ? `<div class="flex items-center text-orange-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg><span class="text-xs font-bold">Only ${item.stock} left!</span></div>`
+                            : `<div class="flex items-center text-green-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-xs font-bold">In Stock (${item.stock} available)</span></div>`}
+                        </div>
+                        <div id="qty-section-${item.id}" class="mt-auto pt-4 border-t border-dashed border-gray-200">
+                            ${buildQtySectionHTML(item)}
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // ============================================
         // CART LOGIC
         // ============================================
+        
+        // Called from input onchange/onblur — updates cart then refreshes card AFTER blur
+        function setQuantityFromInput(id, inputEl) {
+            const item = menuItems.find(i => i.id === id);
+            let qty = parseInt(inputEl.value) || 0;
+            if (qty < 0) qty = 0;
+            if (qty > item.stock) {
+                qty = item.stock;
+                showToastMessage(`Only ${item.stock} ${item.unit} of ${item.name} available!`);
+            }
+            if (qty === 0) { delete cart[id]; }
+            else {
+                if (!cart[id]) { cart[id] = { ...item, qty: qty }; }
+                else { cart[id].qty = qty; }
+            }
+            // Update the input value immediately (in case it was clamped)
+            inputEl.value = qty;
+            // Update subtotal text without replacing DOM
+            const subtotalEl = document.getElementById(`subtotal-${id}`);
+            if (subtotalEl) subtotalEl.textContent = `₱${qty * item.price}`;
+            const qtyMulEl = document.getElementById(`qtymul-${id}`);
+            if (qtyMulEl) qtyMulEl.textContent = `${qty} × ₱${item.price}/${item.unit}`;
+            const badgeContainer = document.getElementById(`card-badge-${id}`);
+            if (badgeContainer) badgeContainer.innerHTML = buildBadgeHTML(item);
+            updateCartUI();
+            // Defer full card rebuild until after keyboard closes
+            setTimeout(() => {
+                if (!isAnyInputFocused()) {
+                    updateSingleCard(id);
+                }
+            }, 100);
+        }
+
+        // Called from +/- buttons and cart sidebar
         function setQuantity(id, value) {
             const item = menuItems.find(i => i.id === id);
             let qty = parseInt(value) || 0;
@@ -668,7 +614,7 @@
                 if (!cart[id]) { cart[id] = { ...item, qty: qty }; }
                 else { cart[id].qty = qty; }
             }
-            updateCardUI(id);
+            updateSingleCard(id);
             updateCartUI();
         }
 
@@ -677,7 +623,7 @@
             if (item.stock <= 0 && change > 0) return;
 
             if (!cart[id]) {
-                if (change > 0) cart[id] = { ...item, qty: 1 };
+                if (change > 0) { cart[id] = { ...item, qty: 1 }; }
             } else {
                 const newQty = cart[id].qty + change;
                 if (change > 0 && newQty > item.stock) {
@@ -686,11 +632,21 @@
                     return;
                 }
                 cart[id].qty = newQty;
-                if (cart[id].qty <= 0) delete cart[id];
+                if (cart[id].qty <= 0) { delete cart[id]; }
             }
 
-            updateCardUI(id);
-            updateCartUI();
+            if (longPressActive) {
+                const qtyInput = document.getElementById(`qty-${id}`);
+                if (qtyInput) qtyInput.value = cart[id] ? cart[id].qty : 0;
+                const subtotalEl = document.getElementById(`subtotal-${id}`);
+                if (subtotalEl && cart[id]) subtotalEl.textContent = `₱${cart[id].qty * item.price}`;
+                const qtyMulEl = document.getElementById(`qtymul-${id}`);
+                if (qtyMulEl && cart[id]) qtyMulEl.textContent = `${cart[id].qty} × ₱${item.price}/${item.unit}`;
+                updateCartUI();
+            } else {
+                updateSingleCard(id);
+                updateCartUI();
+            }
         }
 
         function updateCartUI() {
@@ -706,9 +662,7 @@
                 cartItemsContainer.innerHTML = `
                     <div class="flex flex-col items-center justify-center h-full text-center text-gray-400 mt-10">
                         <div class="bg-gray-100 p-4 rounded-full mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
                         </div>
                         <p class="text-sm font-medium text-gray-500">Your cart is empty.</p>
                         <button onclick="toggleCart()" class="mt-4 text-orange-600 text-sm font-bold hover:underline">Start Ordering</button>
@@ -726,27 +680,21 @@
                     return `
                         <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-200 transition-all duration-200 hover:shadow-md">
                             <div class="flex items-center gap-3">
-                                <div class="w-14 h-14 rounded-lg bg-gray-100 overflow-hidden flex-shrink-0 shadow-sm">
-                                    <img src="${item.image}" class="w-full h-full object-cover" loading="lazy">
-                                </div>
+                                <div class="w-14 h-14 rounded-lg bg-gray-100 overflow-hidden flex-shrink-0 shadow-sm"><img src="${item.image}" class="w-full h-full object-cover"></div>
                                 <div class="flex-1 min-w-0">
                                     <h4 class="font-bold text-gray-800 text-sm truncate">${item.name}</h4>
                                     <p class="text-xs text-gray-400">₱${item.price}/${item.unit}</p>
                                 </div>
-                                <div class="text-right flex-shrink-0">
-                                    <span class="font-bold text-gray-900 text-base">₱${itemTotal}</span>
-                                </div>
+                                <div class="text-right flex-shrink-0"><span class="font-bold text-gray-900 text-base">₱${itemTotal}</span></div>
                             </div>
                             <div class="flex items-center justify-end mt-3 pt-2 border-t border-gray-100">
                                 <div class="flex items-center bg-gray-50 rounded-lg border border-gray-200 overflow-hidden shadow-inner">
                                     <button onclick="updateQuantity(${item.id}, -1)" class="qty-btn w-9 h-9 flex items-center justify-center transition-colors ${item.qty === 1 ? 'hover:bg-red-50 active:bg-red-100' : 'hover:bg-gray-100 active:bg-gray-200'}">
-                                        ${item.qty === 1
-                                            ? `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>`
-                                            : `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>`
-                                        }
+                                        ${item.qty === 1 ? `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>`
+                                        : `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>`}
                                     </button>
                                     <input type="number" inputmode="numeric" min="1" max="${maxStock}" value="${item.qty}"
-                                        onfocus="this.select()" onchange="setQuantity(${item.id}, this.value)" onblur="setQuantity(${item.id}, this.value)" onkeydown="if(event.key==='Enter'){this.blur()}"
+                                        onfocus="this.select()" onchange="setQuantityFromInput(${item.id}, this)" onblur="setQuantityFromInput(${item.id}, this)" onkeydown="if(event.key==='Enter'){this.blur()}"
                                         class="cart-qty-input w-14 h-9 text-center font-bold text-sm text-gray-800 bg-white border-x border-gray-200 focus:outline-none focus:bg-orange-50 transition-colors" />
                                     <button onclick="${!atCartMax ? `updateQuantity(${item.id}, 1)` : ''}" class="qty-btn w-9 h-9 flex items-center justify-center transition-colors ${atCartMax ? 'opacity-30 cursor-not-allowed' : 'hover:bg-green-50 active:bg-green-100'}" ${atCartMax ? 'disabled' : ''}>
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ${atCartMax ? 'text-gray-400' : 'text-green-600'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
@@ -771,13 +719,9 @@
             const sidebar = document.getElementById('cart-sidebar');
             const overlay = document.getElementById('cart-overlay');
             if (sidebar.classList.contains('translate-x-full')) {
-                sidebar.classList.remove('translate-x-full');
-                overlay.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
+                sidebar.classList.remove('translate-x-full'); overlay.classList.remove('hidden'); document.body.style.overflow = 'hidden';
             } else {
-                sidebar.classList.add('translate-x-full');
-                overlay.classList.add('hidden');
-                document.body.style.overflow = '';
+                sidebar.classList.add('translate-x-full'); overlay.classList.add('hidden'); document.body.style.overflow = '';
             }
         }
 
@@ -800,9 +744,7 @@
                 openCheckout();
             } catch (error) { console.error('Error during checkout check:', error); openCheckout(); }
             finally {
-                checkoutBtn.disabled = false;
-                checkoutBtnText.textContent = 'Proceed to Checkout';
-                checkoutSpinner.classList.add('hidden');
+                checkoutBtn.disabled = false; checkoutBtnText.textContent = 'Proceed to Checkout'; checkoutSpinner.classList.add('hidden');
                 if (Object.values(cart).length === 0) checkoutBtn.disabled = true;
             }
         }
@@ -817,14 +759,13 @@
                     const stockItem = data.stock.find(s => s.name === cartItem.name);
                     if (!stockItem) return;
                     const availableStock = parseInt(stockItem.stock) || 0;
-                    if (availableStock === 0) issues.push({ name: cartItem.name, requested: cartItem.qty, available: 0, type: 'out_of_stock' });
-                    else if (cartItem.qty > availableStock) issues.push({ name: cartItem.name, requested: cartItem.qty, available: availableStock, type: 'insufficient' });
+                    if (availableStock === 0) { issues.push({ name: cartItem.name, requested: cartItem.qty, available: 0, type: 'out_of_stock' }); }
+                    else if (cartItem.qty > availableStock) { issues.push({ name: cartItem.name, requested: cartItem.qty, available: availableStock, type: 'insufficient' }); }
                 });
                 if (issues.length > 0) {
                     data.stock.forEach(item => { const menuItem = menuItems.find(m => m.name === item.name); if (menuItem) menuItem.stock = parseInt(item.stock) || 0; });
-                    renderMenuFull();
-                    updateCartUI();
-                    return { success: false, issues };
+                    renderMenu(); updateCartUI();
+                    return { success: false, issues: issues };
                 }
                 return { success: true };
             } catch (error) { console.error('Error verifying stock:', error); return { success: true }; }
@@ -852,16 +793,14 @@
                 document.getElementById('error-message').textContent = 'Please enter a valid 11-digit contact number (e.g., 09171234567)';
                 closeCheckout(); document.getElementById('error-modal').classList.remove('hidden'); return;
             }
-            submitBtn.disabled = true; submitBtnText.textContent = 'Checking store...';
-            submitBtnIcon.classList.add('hidden'); submitSpinner.classList.remove('hidden');
-
+            submitBtn.disabled = true; submitBtnText.textContent = 'Checking store...'; submitBtnIcon.classList.add('hidden'); submitSpinner.classList.remove('hidden');
             try {
                 const isOpen = await freshStoreCheck();
                 if (!isOpen) { closeCheckout(); showStoreClosedModal(); submitBtn.disabled = false; submitBtnText.textContent = 'Place Order'; submitBtnIcon.classList.remove('hidden'); submitSpinner.classList.add('hidden'); return; }
                 submitBtnText.textContent = 'Verifying stock...';
                 const stockCheck = await verifyStockAvailability();
                 if (!stockCheck.success) { closeCheckout(); showStockErrorModal(stockCheck.issues); submitBtn.disabled = false; submitBtnText.textContent = 'Place Order'; submitBtnIcon.classList.remove('hidden'); submitSpinner.classList.add('hidden'); return; }
-            } catch (error) { console.error('Error re-checking:', error); }
+            } catch (error) { console.error('Error re-checking store status:', error); }
 
             submitBtnText.textContent = 'Submitting...';
             const name = document.getElementById('customer-name').value;
@@ -883,8 +822,7 @@
                 document.getElementById('error-message').textContent = 'Failed to submit order. Please check your internet connection and try again.';
                 closeCheckout(); document.getElementById('error-modal').classList.remove('hidden');
             } finally {
-                submitBtn.disabled = false; submitBtnText.textContent = 'Place Order';
-                submitBtnIcon.classList.remove('hidden'); submitSpinner.classList.add('hidden');
+                submitBtn.disabled = false; submitBtnText.textContent = 'Place Order'; submitBtnIcon.classList.remove('hidden'); submitSpinner.classList.add('hidden');
             }
         }
 
@@ -896,20 +834,14 @@
             copyText.select(); copyText.setSelectionRange(0, 99999);
             navigator.clipboard.writeText(copyText.value).then(() => { showToast(); });
         }
-        function showToast() {
-            const toast = document.getElementById('toast');
-            toast.textContent = 'Copied to clipboard!'; toast.classList.remove('opacity-0');
-            setTimeout(() => { toast.classList.add('opacity-0'); }, 3000);
-        }
-        function showToastMessage(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message; toast.classList.remove('opacity-0');
-            setTimeout(() => { toast.classList.add('opacity-0'); }, 3000);
-        }
+        function showToast() { const t = document.getElementById('toast'); t.textContent = 'Copied to clipboard!'; t.classList.remove('opacity-0'); setTimeout(() => { t.classList.add('opacity-0'); }, 3000); }
+        function showToastMessage(message) { const t = document.getElementById('toast'); t.textContent = message; t.classList.remove('opacity-0'); setTimeout(() => { t.classList.add('opacity-0'); }, 3000); }
+
         function resetApp() {
-            cart = {}; renderMenuFull(); updateCartUI();
+            cart = {}; renderMenu(); updateCartUI();
             document.getElementById('success-modal').classList.add('hidden');
-            document.getElementById('order-form').reset(); window.scrollTo(0,0);
+            document.getElementById('order-form').reset();
+            window.scrollTo(0,0);
         }
 
         setInterval(() => { checkStoreStatus(); fetchMenuStock(); }, 500);
