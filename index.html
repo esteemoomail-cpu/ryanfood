@@ -33,21 +33,11 @@
         }
 
         #header-logo {
-            transition: all 0.3s ease-in-out;
             max-height: 200px;
             opacity: 1;
-            overflow: hidden;
-        }
-
-        #header-logo.hide-logo {
-            max-height: 0;
-            opacity: 0;
-            margin: 0;
-            padding: 0;
         }
 
         header {
-            transition: padding 0.3s ease-in-out;
             position: relative;
         }
 
@@ -341,25 +331,6 @@
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzwET_dt4FZsGCQUO_xKJU4qTNQiIMLkcR5FNq9ISj6SaOna3CeUgCH7GH4rLj8JzAE/exec';
         // ============================================
 
-        // ============================================
-        // LOGO HIDE/SHOW ON SCROLL
-        // ============================================
-        let lastScrollTop = 0;
-        const logo = document.getElementById('header-logo');
-        const header = document.querySelector('header');
-        
-        window.addEventListener('scroll', function() {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            
-            if (scrollTop > lastScrollTop && scrollTop > 50) {
-                logo.classList.add('hide-logo');
-            } else {
-                logo.classList.remove('hide-logo');
-            }
-            
-            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-        }, false);
-
         // Menu Data (stock quantity will be fetched from Google Sheets)
         let menuItems = [
             {
@@ -618,6 +589,7 @@
             container.innerHTML = menuItems.map(item => {
                 const outOfStock = item.stock <= 0;
                 const lowStock = item.stock > 0 && item.stock <= 10;
+                const currentQty = cart[item.id] ? cart[item.id].qty : 0;
                 
                 return `
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col food-card-hover transition-all duration-300 group ${outOfStock ? 'opacity-60' : ''}">
@@ -675,9 +647,16 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                                     </svg>
                                 </button>
-                                <span class="w-8 text-center font-bold text-gray-800 text-sm" id="qty-${item.id}">
-                                    ${cart[item.id] ? cart[item.id].qty : 0}
-                                </span>
+                                <input 
+                                    type="number" 
+                                    min="0" 
+                                    max="${item.stock}" 
+                                    value="${currentQty}" 
+                                    id="qty-${item.id}"
+                                    onchange="setQuantity(${item.id}, this.value)"
+                                    class="w-12 text-center font-bold text-gray-800 text-sm bg-transparent border-0 focus:outline-none focus:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                    ${outOfStock ? 'disabled' : ''}
+                                />
                                 <button onclick="updateQuantity(${item.id}, 1)" class="w-8 h-8 rounded shadow-sm flex items-center justify-center transition ${!outOfStock ? 'bg-orange-500 text-white hover:bg-orange-600' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}" ${outOfStock ? 'disabled' : ''}>
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -694,6 +673,37 @@
         // ============================================
         // CART LOGIC
         // ============================================
+        function setQuantity(id, value) {
+            const item = menuItems.find(i => i.id === id);
+            let qty = parseInt(value) || 0;
+            
+            // Validate quantity
+            if (qty < 0) qty = 0;
+            if (qty > item.stock) {
+                qty = item.stock;
+                showToastMessage(`Only ${item.stock} ${item.unit} of ${item.name} available!`);
+            }
+            
+            // Update cart
+            if (qty === 0) {
+                delete cart[id];
+            } else {
+                if (!cart[id]) {
+                    cart[id] = { ...item, qty: qty };
+                } else {
+                    cart[id].qty = qty;
+                }
+            }
+            
+            // Update UI
+            const qtyElement = document.getElementById(`qty-${id}`);
+            if (qtyElement) {
+                qtyElement.value = qty;
+            }
+            
+            updateCartUI();
+        }
+        
         function updateQuantity(id, change) {
             const item = menuItems.find(i => i.id === id);
             
@@ -724,7 +734,7 @@
 
             const qtyElement = document.getElementById(`qty-${id}`);
             if (qtyElement) {
-                qtyElement.innerText = cart[id] ? cart[id].qty : 0;
+                qtyElement.value = cart[id] ? cart[id].qty : 0;
                 const minusBtn = qtyElement.previousElementSibling;
                 if (minusBtn) {
                     minusBtn.disabled = !cart[id] || item.stock <= 0;
