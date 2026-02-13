@@ -10,21 +10,21 @@
     <meta name="description" content="Craving authentic Filipino street food? Order your favorite siomai, kikiam, kwek-kwek, fries, and more! We accept GCash payments. Fresh and delicious street food delivered.">
     
     <!-- Open Graph / Facebook -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://ryanstreetfood.pages.dev/">
-<meta property="og:title" content="Ryan's Filipino Street Food - Siomai, Kikiam, Kwek-kwek & More!">
-<meta property="og:description" content="Craving authentic Filipino street food? Order your favorite siomai, kikiam, kwek-kwek, fries, and more! We accept GCash payments.">
-<meta property="og:image" content="https://ryanstreetfood.pages.dev/og-image.png">
-<meta property="og:image:width" content="630">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Ryan's Filipino Street Food Logo">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ryanstreetfood.pages.dev/">
+    <meta property="og:title" content="Ryan's Filipino Street Food - Siomai, Kikiam, Kwek-kwek & More!">
+    <meta property="og:description" content="Craving authentic Filipino street food? Order your favorite siomai, kikiam, kwek-kwek, fries, and more! We accept GCash payments.">
+    <meta property="og:image" content="https://ryanstreetfood.pages.dev/og-image.png">
+    <meta property="og:image:width" content="630">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Ryan's Filipino Street Food Logo">
 
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="https://ryanstreetfood.pages.dev/">
-<meta name="twitter:title" content="Ryan's Filipino Street Food">
-<meta name="twitter:description" content="Craving authentic Filipino street food?">
-<meta name="twitter:image" content="https://ryanstreetfood.pages.dev/og-image.png">
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://ryanstreetfood.pages.dev/">
+    <meta name="twitter:title" content="Ryan's Filipino Street Food">
+    <meta name="twitter:description" content="Craving authentic Filipino street food?">
+    <meta name="twitter:image" content="https://ryanstreetfood.pages.dev/og-image.png">
     
     <!-- Additional Meta Tags -->
     <meta name="keywords" content="Filipino street food, siomai, kikiam, kwek-kwek, street food Philippines, GCash payment, order food online">
@@ -110,6 +110,57 @@
         .pulse-border {
             animation: pulse-border 2s ease-in-out infinite;
         }
+
+        /* ===== Quantity Selector Styles ===== */
+        .qty-btn {
+            touch-action: manipulation;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .qty-input-field {
+            -moz-appearance: textfield;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .qty-input-field::-webkit-outer-spin-button,
+        .qty-input-field::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .qty-input-field:focus {
+            box-shadow: inset 0 0 0 2px #f97316;
+        }
+
+        /* Cart quantity input */
+        .cart-qty-input {
+            -moz-appearance: textfield;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .cart-qty-input::-webkit-outer-spin-button,
+        .cart-qty-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Ripple effect for add button */
+        .btn-ripple {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-ripple::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at var(--ripple-x, 50%) var(--ripple-y, 50%), rgba(255,255,255,0.3) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .btn-ripple:active::after {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-orange-50 min-h-screen pb-24 text-gray-800">
@@ -171,11 +222,10 @@
         <!-- Menu Grid -->
         <div class="flex items-center justify-between mb-4 border-b border-gray-200 pb-2">
             <h3 class="text-lg font-bold text-gray-800">Menu</h3>
-            <span class="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">6 Items Available</span>
+            <span id="items-available-badge" class="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">6 Items Available</span>
         </div>
         
         <div id="menu-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Menu items will be injected here via JavaScript -->
         </div>
 
     </main>
@@ -196,7 +246,6 @@
 
         <!-- Cart Items Container -->
         <div id="cart-items" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
-            <!-- Items injected here -->
         </div>
 
         <!-- Cart Footer -->
@@ -229,7 +278,7 @@
         </div>
     </div>
 
-    <!-- Stock Error Modal (shown when stock is insufficient) -->
+    <!-- Stock Error Modal -->
     <div id="stock-error-modal" class="fixed inset-0 bg-black/70 hidden z-[70] flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 animate-fade-in">
             <div class="flex items-center justify-center mb-4">
@@ -243,7 +292,6 @@
             <p class="text-gray-600 mb-4 text-sm text-center">Some items in your cart have limited stock:</p>
             
             <div id="stock-issues-list" class="bg-gray-50 rounded-lg p-4 mb-4 space-y-3 max-h-64 overflow-y-auto">
-                <!-- Stock issues will be inserted here -->
             </div>
             
             <p class="text-xs text-gray-500 mb-4 text-center">Your cart has been updated. Please review and try again.</p>
@@ -366,144 +414,113 @@
         // GOOGLE SHEETS CONFIGURATION
         // ============================================
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzwET_dt4FZsGCQUO_xKJU4qTNQiIMLkcR5FNq9ISj6SaOna3CeUgCH7GH4rLj8JzAE/exec';
-        // ============================================
 
-        // Menu Data (stock quantity will be fetched from Google Sheets)
+        // Menu Data
         let menuItems = [
-            {
-                id: 1,
-                name: "Siomai",
-                price: 5,
-                unit: "pc",
-                image: "https://images.yummy.ph/yummy/uploads/2009/10/08-2008_yummy.ph_recipe_image_siomai_main-1.jpg",
-                desc: "Steamed pork dumplings with calamansi & chili garlic.",
-                stock: 100
-            },
-            {
-                id: 2,
-                name: "Kikiam",
-                price: 5,
-                unit: "pc",
-                image: "kikiam.png",
-                desc: "Fried fish meat rolls. Best with sweet & spicy sauce.",
-                stock: 100
-            },
-            {
-                id: 3,
-                name: "Kwek-kwek",
-                price: 20,
-                unit: "order",
-                image: "kwek2.png",
-                desc: "Boiled quail eggs coated with crispy orange batter.",
-                stock: 50
-            },
-            {
-                id: 4,
-                name: "Fries",
-                price: 15,
-                unit: "cup",
-                image: "fries.png",
-                desc: "Golden crispy potato fries. Cheese or BBQ flavor.",
-                stock: 30
-            },
-            {
-                id: 5,
-                name: "Fish Flat",
-                price: 10,
-                unit: "cup",
-                image: "fishflat.png",
-                desc: "Flattened fish balls, deep fried to perfection.",
-                stock: 40
-            },
-            {
-                id: 6,
-                name: "Cheese Stick",
-                price: 20,
-                unit: "cup",
-                image: "cheesestick.png",
-                desc: "Deep-fried cheese wrapped in crispy lumpia wrapper.",
-                stock: 25
-            }
+            { id: 1, name: "Siomai", price: 5, unit: "pc", image: "https://images.yummy.ph/yummy/uploads/2009/10/08-2008_yummy.ph_recipe_image_siomai_main-1.jpg", desc: "Steamed pork dumplings with calamansi & chili garlic.", stock: 100 },
+            { id: 2, name: "Kikiam", price: 5, unit: "pc", image: "kikiam.png", desc: "Fried fish meat rolls. Best with sweet & spicy sauce.", stock: 100 },
+            { id: 3, name: "Kwek-kwek", price: 20, unit: "order", image: "kwek2.png", desc: "Boiled quail eggs coated with crispy orange batter.", stock: 50 },
+            { id: 4, name: "Fries", price: 15, unit: "cup", image: "fries.png", desc: "Golden crispy potato fries. Cheese or BBQ flavor.", stock: 30 },
+            { id: 5, name: "Fish Flat", price: 10, unit: "cup", image: "fishflat.png", desc: "Flattened fish balls, deep fried to perfection.", stock: 40 },
+            { id: 6, name: "Cheese Stick", price: 20, unit: "cup", image: "cheesestick.png", desc: "Deep-fried cheese wrapped in crispy lumpia wrapper.", stock: 25 }
         ];
 
         // State
         let cart = {};
         let storeOpen = true;
         let lastStoreCheck = 0;
-        let storeClosedBannerDismissed = false; // Track if user dismissed the banner
+        let storeClosedBannerDismissed = false;
+
+        // Long press state
+        let longPressTimer = null;
+        let longPressInterval = null;
+        let longPressActive = false;
+
+        // Global listeners for long press cleanup
+        document.addEventListener('mouseup', stopLongPress);
+        document.addEventListener('touchend', stopLongPress);
+        document.addEventListener('touchcancel', stopLongPress);
+        document.addEventListener('contextmenu', function(e) {
+            if (longPressActive) e.preventDefault();
+        });
 
         // Initialization
         document.addEventListener('DOMContentLoaded', () => {
             renderMenu();
-            checkStoreStatus(); // Initial check on page load
-            fetchMenuStock(); // Fetch item stock quantities
+            checkStoreStatus();
+            fetchMenuStock();
         });
 
         // ============================================
-        // STORE STATUS CHECK (from Google Sheets)
+        // LONG PRESS HANDLERS
+        // ============================================
+        function startLongPress(id, change) {
+            stopLongPress();
+            longPressActive = true;
+            updateQuantity(id, change);
+
+            longPressTimer = setTimeout(() => {
+                longPressInterval = setInterval(() => {
+                    updateQuantity(id, change);
+                }, 80);
+            }, 400);
+        }
+
+        function stopLongPress() {
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
+            if (longPressInterval) {
+                clearInterval(longPressInterval);
+                longPressInterval = null;
+            }
+            if (longPressActive) {
+                longPressActive = false;
+                // Ensure final state is rendered
+                renderMenu();
+                updateCartUI();
+            }
+        }
+
+        // ============================================
+        // STORE STATUS CHECK
         // ============================================
         async function checkStoreStatus() {
             try {
                 const response = await fetch(GOOGLE_SCRIPT_URL + '?t=' + Date.now());
                 const data = await response.json();
-                
                 lastStoreCheck = Date.now();
-
                 const header = document.getElementById('main-header');
                 const cartIcon = document.getElementById('cart-icon');
-
                 if (data.storeClosed) {
                     storeOpen = false;
                     showStoreClosedBanner();
-                    // Change to red gradient
-                    if (header) {
-                        header.className = 'bg-gradient-to-r from-red-700 to-red-500 text-white shadow-lg sticky top-0 z-50 transition-all duration-500';
-                    }
-                    if (cartIcon) {
-                        cartIcon.className = 'bg-gradient-to-br from-red-700 to-red-500 p-3 rounded-full shadow-lg transition-all duration-500';
-                    }
+                    if (header) header.className = 'bg-gradient-to-r from-red-700 to-red-500 text-white shadow-lg sticky top-0 z-50 transition-all duration-500';
+                    if (cartIcon) cartIcon.className = 'bg-gradient-to-br from-red-700 to-red-500 p-3 rounded-full shadow-lg transition-all duration-500';
                 } else {
                     storeOpen = true;
                     hideStoreClosedBanner();
-                    // Change to orange gradient
-                    if (header) {
-                        header.className = 'bg-gradient-to-r from-red-600 to-orange-600 text-white shadow-lg sticky top-0 z-50 transition-all duration-500';
-                    }
-                    if (cartIcon) {
-                        cartIcon.className = 'bg-gradient-to-br from-orange-500 to-red-600 p-3 rounded-full shadow-lg transition-all duration-500';
-                    }
-                    // Reset the dismissed flag when store reopens
-                    if (!data.storeClosed && storeClosedBannerDismissed) {
-                        storeClosedBannerDismissed = false;
-                    }
+                    if (header) header.className = 'bg-gradient-to-r from-red-600 to-orange-600 text-white shadow-lg sticky top-0 z-50 transition-all duration-500';
+                    if (cartIcon) cartIcon.className = 'bg-gradient-to-br from-orange-500 to-red-600 p-3 rounded-full shadow-lg transition-all duration-500';
+                    if (!data.storeClosed && storeClosedBannerDismissed) storeClosedBannerDismissed = false;
                 }
-                
                 return storeOpen;
             } catch (error) {
                 console.error('Error checking store status:', error);
-                // On error, return current known state (don't change it)
                 return storeOpen;
             }
         }
 
-        // ============================================
-        // FETCH MENU STOCK (from Google Sheets)
-        // ============================================
         async function fetchMenuStock() {
             try {
                 const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getStock&t=' + Date.now());
                 const data = await response.json();
-                
                 if (data.stock) {
-                    // Update menu items with stock data
                     data.stock.forEach(item => {
                         const menuItem = menuItems.find(m => m.name === item.name);
-                        if (menuItem) {
-                            menuItem.stock = parseInt(item.stock) || 0;
-                        }
+                        if (menuItem) menuItem.stock = parseInt(item.stock) || 0;
                     });
-                    
-                    // Re-render menu to show updated stock
                     renderMenu();
                     updateCartUI();
                 }
@@ -512,165 +529,173 @@
             }
         }
 
-        // Fresh check — always fetches from Google Sheets
         async function freshStoreCheck() {
             try {
                 const response = await fetch(GOOGLE_SCRIPT_URL + '?t=' + Date.now());
                 const data = await response.json();
-                
                 lastStoreCheck = Date.now();
-
                 const header = document.getElementById('main-header');
                 const cartIcon = document.getElementById('cart-icon');
-
                 if (data.storeClosed) {
                     storeOpen = false;
                     showStoreClosedBanner();
-                    // Change to red gradient
-                    if (header) {
-                        header.className = 'bg-gradient-to-r from-red-700 to-red-500 text-white shadow-lg sticky top-0 z-50 transition-all duration-500';
-                    }
-                    if (cartIcon) {
-                        cartIcon.className = 'bg-gradient-to-br from-red-700 to-red-500 p-3 rounded-full shadow-lg transition-all duration-500';
-                    }
-                    return false; // store is closed
+                    if (header) header.className = 'bg-gradient-to-r from-red-700 to-red-500 text-white shadow-lg sticky top-0 z-50 transition-all duration-500';
+                    if (cartIcon) cartIcon.className = 'bg-gradient-to-br from-red-700 to-red-500 p-3 rounded-full shadow-lg transition-all duration-500';
+                    return false;
                 } else {
                     storeOpen = true;
                     hideStoreClosedBanner();
-                    // Change to orange gradient
-                    if (header) {
-                        header.className = 'bg-gradient-to-r from-red-600 to-orange-600 text-white shadow-lg sticky top-0 z-50 transition-all duration-500';
-                    }
-                    if (cartIcon) {
-                        cartIcon.className = 'bg-gradient-to-br from-orange-500 to-red-600 p-3 rounded-full shadow-lg transition-all duration-500';
-                    }
-                    return true; // store is open
+                    if (header) header.className = 'bg-gradient-to-r from-red-600 to-orange-600 text-white shadow-lg sticky top-0 z-50 transition-all duration-500';
+                    if (cartIcon) cartIcon.className = 'bg-gradient-to-br from-orange-500 to-red-600 p-3 rounded-full shadow-lg transition-all duration-500';
+                    return true;
                 }
             } catch (error) {
                 console.error('Error checking store status:', error);
-                // On network error, allow the action (fail open) but warn
                 return true;
             }
         }
 
         function showStoreClosedBanner() {
-            // Don't show if user already dismissed it
-            if (storeClosedBannerDismissed) {
-                return;
-            }
-            
+            if (storeClosedBannerDismissed) return;
             const banner = document.getElementById('store-closed-banner');
-            if (banner) {
-                banner.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-            }
+            if (banner) { banner.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
         }
 
         function hideStoreClosedBanner() {
             const banner = document.getElementById('store-closed-banner');
-            if (banner) {
-                banner.classList.add('hidden');
-                document.body.style.overflow = '';
-                storeClosedBannerDismissed = true; // Mark as dismissed
-            }
+            if (banner) { banner.classList.add('hidden'); document.body.style.overflow = ''; storeClosedBannerDismissed = true; }
         }
 
-        function showStoreClosedModal() {
-            document.getElementById('store-closed-modal').classList.remove('hidden');
-        }
-
-        function closeStoreClosedModal() {
-            document.getElementById('store-closed-modal').classList.add('hidden');
-        }
+        function showStoreClosedModal() { document.getElementById('store-closed-modal').classList.remove('hidden'); }
+        function closeStoreClosedModal() { document.getElementById('store-closed-modal').classList.add('hidden'); }
 
         function showStockErrorModal(issues) {
             const modal = document.getElementById('stock-error-modal');
             const issuesList = document.getElementById('stock-issues-list');
-            
-            // Build issues list HTML
             issuesList.innerHTML = issues.map(issue => {
                 if (issue.type === 'out_of_stock') {
-                    return `
-                        <div class="bg-white border-l-4 border-red-500 p-3 rounded shadow-sm">
-                            <div class="flex items-start">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600 mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                                <div class="flex-1">
-                                    <p class="font-bold text-gray-800 text-sm">${issue.name}</p>
-                                    <p class="text-xs text-red-600 font-semibold">SOLD OUT</p>
-                                    <p class="text-xs text-gray-500 mt-1">Removed from cart</p>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                    return `<div class="bg-white border-l-4 border-red-500 p-3 rounded shadow-sm"><div class="flex items-start"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600 mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg><div class="flex-1"><p class="font-bold text-gray-800 text-sm">${issue.name}</p><p class="text-xs text-red-600 font-semibold">SOLD OUT</p><p class="text-xs text-gray-500 mt-1">Removed from cart</p></div></div></div>`;
                 } else {
-                    return `
-                        <div class="bg-white border-l-4 border-orange-500 p-3 rounded shadow-sm">
-                            <div class="flex items-start">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-orange-600 mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                </svg>
-                                <div class="flex-1">
-                                    <p class="font-bold text-gray-800 text-sm">${issue.name}</p>
-                                    <p class="text-xs text-orange-600 font-semibold">Limited Stock</p>
-                                    <p class="text-xs text-gray-600 mt-1">You wanted: <span class="font-bold">${issue.requested}</span></p>
-                                    <p class="text-xs text-gray-600">Available: <span class="font-bold text-green-600">${issue.available}</span></p>
-                                    <p class="text-xs text-gray-500 mt-1">Quantity updated to ${issue.available}</p>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                    return `<div class="bg-white border-l-4 border-orange-500 p-3 rounded shadow-sm"><div class="flex items-start"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-orange-600 mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg><div class="flex-1"><p class="font-bold text-gray-800 text-sm">${issue.name}</p><p class="text-xs text-orange-600 font-semibold">Limited Stock</p><p class="text-xs text-gray-600 mt-1">You wanted: <span class="font-bold">${issue.requested}</span></p><p class="text-xs text-gray-600">Available: <span class="font-bold text-green-600">${issue.available}</span></p><p class="text-xs text-gray-500 mt-1">Quantity updated to ${issue.available}</p></div></div></div>`;
                 }
             }).join('');
-            
-            // Update cart quantities based on issues
             issues.forEach(issue => {
                 const menuItem = menuItems.find(m => m.name === issue.name);
                 if (!menuItem) return;
-                
-                if (issue.type === 'out_of_stock') {
-                    // Remove from cart
-                    delete cart[menuItem.id];
-                } else if (issue.type === 'insufficient') {
-                    // Update to available quantity
-                    if (cart[menuItem.id]) {
-                        cart[menuItem.id].qty = issue.available;
-                    }
-                }
+                if (issue.type === 'out_of_stock') { delete cart[menuItem.id]; }
+                else if (issue.type === 'insufficient') { if (cart[menuItem.id]) cart[menuItem.id].qty = issue.available; }
             });
-            
-            // Update UI
             renderMenu();
             updateCartUI();
-            
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
 
         function closeStockErrorModal() {
-            const modal = document.getElementById('stock-error-modal');
-            modal.classList.add('hidden');
+            document.getElementById('stock-error-modal').classList.add('hidden');
             document.body.style.overflow = '';
         }
 
         // ============================================
-        // RENDER MENU
+        // RENDER MENU — NO REFRESH ANIMATIONS
         // ============================================
         function renderMenu() {
             const container = document.getElementById('menu-container');
             const availableCount = menuItems.filter(item => item.stock > 0).length;
             
-            // Update available items count
-            const countBadge = document.querySelector('.text-xs.font-medium.text-gray-500.bg-gray-100');
-            if (countBadge) {
-                countBadge.textContent = `${availableCount} Items Available`;
-            }
+            const countBadge = document.getElementById('items-available-badge');
+            if (countBadge) countBadge.textContent = `${availableCount} Items Available`;
             
             container.innerHTML = menuItems.map(item => {
                 const outOfStock = item.stock <= 0;
                 const lowStock = item.stock > 0 && item.stock <= 10;
                 const currentQty = cart[item.id] ? cart[item.id].qty : 0;
+                const itemSubtotal = currentQty * item.price;
+                const atMax = currentQty >= item.stock;
+                
+                // Build the quantity selector section
+                let qtySection = '';
+                
+                if (outOfStock && currentQty === 0) {
+                    // SOLD OUT button
+                    qtySection = `
+                        <button disabled class="w-full bg-gray-200 text-gray-400 py-3 rounded-xl font-bold flex items-center justify-center gap-2 cursor-not-allowed">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                            </svg>
+                            Sold Out
+                        </button>`;
+                } else if (currentQty === 0) {
+                    // ADD TO CART button
+                    qtySection = `
+                        <button 
+                            onclick="updateQuantity(${item.id}, 1)" 
+                            class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:from-orange-600 hover:to-red-500 active:scale-[0.97] transition-all duration-200 shadow-md btn-ripple group/add"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover/add:rotate-90 duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                            Add to Cart
+                        </button>`;
+                } else {
+                    // QUANTITY SELECTOR
+                    qtySection = `
+                        <div class="space-y-2">
+                            <div class="flex items-center bg-orange-50 rounded-xl border-2 border-orange-300 overflow-hidden shadow-sm">
+                                <!-- Minus / Trash Button -->
+                                <button 
+                                    onmousedown="startLongPress(${item.id}, -1)" 
+                                    ontouchstart="startLongPress(${item.id}, -1)"
+                                    oncontextmenu="return false"
+                                    class="qty-btn w-12 h-12 flex items-center justify-center transition-all duration-150 flex-shrink-0 ${currentQty === 1 ? 'bg-red-50 hover:bg-red-100 active:bg-red-200' : 'hover:bg-orange-100 active:bg-orange-200'}"
+                                >
+                                    ${currentQty === 1 ? `
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    ` : `
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" />
+                                        </svg>
+                                    `}
+                                </button>
+                                
+                                <!-- Editable Quantity Input -->
+                                <input 
+                                    type="number" 
+                                    inputmode="numeric"
+                                    min="0" 
+                                    max="${item.stock}" 
+                                    value="${currentQty}" 
+                                    id="qty-${item.id}"
+                                    onfocus="this.select()"
+                                    onchange="setQuantity(${item.id}, this.value)"
+                                    onblur="setQuantity(${item.id}, this.value)"
+                                    onkeydown="if(event.key==='Enter'){this.blur()}"
+                                    class="qty-input-field w-full h-12 text-center font-bold text-xl text-gray-800 bg-white border-x-2 border-orange-300 focus:outline-none focus:bg-orange-50 transition-colors"
+                                />
+                                
+                                <!-- Plus Button -->
+                                <button 
+                                    onmousedown="${!atMax ? `startLongPress(${item.id}, 1)` : ''}" 
+                                    ontouchstart="${!atMax ? `startLongPress(${item.id}, 1)` : ''}"
+                                    oncontextmenu="return false"
+                                    class="qty-btn w-12 h-12 flex items-center justify-center transition-all duration-150 flex-shrink-0 ${atMax ? 'opacity-30 cursor-not-allowed bg-gray-50' : 'bg-green-50 hover:bg-green-100 active:bg-green-200'}"
+                                    ${atMax ? 'disabled' : ''}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ${atMax ? 'text-gray-400' : 'text-green-600'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                                    </svg>
+                                </button>
+                            </div>
+                            
+                            <!-- Subtotal Row -->
+                            <div class="flex items-center justify-between px-1">
+                                <span class="text-xs text-gray-400 font-medium" id="qtymul-${item.id}">${currentQty} × ₱${item.price}/${item.unit}</span>
+                                <span class="text-sm font-bold text-orange-600" id="subtotal-${item.id}">₱${itemSubtotal}</span>
+                            </div>
+                        </div>`;
+                }
                 
                 return `
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col food-card-hover transition-all duration-300 group ${outOfStock ? 'opacity-60' : ''}">
@@ -681,8 +706,14 @@
                             <div class="bg-red-600 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg">
                                 SOLD OUT
                             </div>
-                        </div>
-                        ` : ''}
+                        </div>` : ''}
+                        ${currentQty > 0 ? `
+                        <div class="absolute top-3 right-3 bg-orange-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-lg flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            ${currentQty}
+                        </div>` : ''}
                         <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4 pt-10">
                              <div class="absolute bottom-3 right-3 bg-white px-3 py-1 rounded-full text-sm font-bold text-orange-600 shadow-lg">
                                 ₱${item.price} <span class="text-[10px] font-normal text-gray-500">/${item.unit}</span>
@@ -721,53 +752,28 @@
                             `}
                         </div>
                         
-                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-dashed border-gray-200">
-                            <div class="flex items-center bg-gray-50 rounded-lg p-1 border border-gray-200">
-                                <button onclick="updateQuantity(${item.id}, -1)" class="w-8 h-8 rounded bg-white text-gray-600 hover:text-red-600 shadow-sm flex items-center justify-center transition disabled:opacity-30 disabled:hover:text-gray-600" ${!cart[item.id] || outOfStock ? 'disabled' : ''}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                                    </svg>
-                                </button>
-                                <input 
-                                    type="number" 
-                                    min="0" 
-                                    max="${item.stock}" 
-                                    value="${currentQty}" 
-                                    id="qty-${item.id}"
-                                    onchange="setQuantity(${item.id}, this.value)"
-                                    onclick="event.stopPropagation()"
-                                    ontouchstart="event.stopPropagation()"
-                                    class="w-12 text-center font-bold text-gray-800 text-sm bg-transparent border-0 focus:outline-none focus:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                    ${outOfStock ? 'disabled' : ''}
-                                />
-                                <button onclick="updateQuantity(${item.id}, 1)" class="w-8 h-8 rounded shadow-sm flex items-center justify-center transition ${!outOfStock ? 'bg-orange-500 text-white hover:bg-orange-600' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}" ${outOfStock ? 'disabled' : ''}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                                    </svg>
-                                </button>
-                            </div>
+                        <!-- Quantity Selector Area -->
+                        <div class="mt-auto pt-4 border-t border-dashed border-gray-200">
+                            ${qtySection}
                         </div>
                     </div>
-                </div>
-            `;
+                </div>`;
             }).join('');
         }
 
         // ============================================
-        // CART LOGIC
+        // CART LOGIC — REDESIGNED
         // ============================================
         function setQuantity(id, value) {
             const item = menuItems.find(i => i.id === id);
             let qty = parseInt(value) || 0;
             
-            // Validate quantity
             if (qty < 0) qty = 0;
             if (qty > item.stock) {
                 qty = item.stock;
                 showToastMessage(`Only ${item.stock} ${item.unit} of ${item.name} available!`);
             }
             
-            // Update cart
             if (qty === 0) {
                 delete cart[id];
             } else {
@@ -778,22 +784,14 @@
                 }
             }
             
-            // Update UI
-            const qtyElement = document.getElementById(`qty-${id}`);
-            if (qtyElement) {
-                qtyElement.value = qty;
-            }
-            
+            renderMenu();
             updateCartUI();
         }
         
         function updateQuantity(id, change) {
             const item = menuItems.find(i => i.id === id);
             
-            // Don't allow adding out of stock items
-            if (item.stock <= 0 && change > 0) {
-                return;
-            }
+            if (item.stock <= 0 && change > 0) return;
             
             if (!cart[id]) {
                 if (change > 0) {
@@ -802,10 +800,9 @@
             } else {
                 const newQty = cart[id].qty + change;
                 
-                // Check if trying to add more than available stock
                 if (change > 0 && newQty > item.stock) {
-                    // Show alert that stock limit reached
                     showToastMessage(`Only ${item.stock} ${item.unit} of ${item.name} available!`);
+                    stopLongPress();
                     return;
                 }
                 
@@ -815,16 +812,19 @@
                 }
             }
 
-            const qtyElement = document.getElementById(`qty-${id}`);
-            if (qtyElement) {
-                qtyElement.value = cart[id] ? cart[id].qty : 0;
-                const minusBtn = qtyElement.previousElementSibling;
-                if (minusBtn) {
-                    minusBtn.disabled = !cart[id] || item.stock <= 0;
-                }
+            // During long press, only do lightweight updates
+            if (longPressActive) {
+                const qtyInput = document.getElementById(`qty-${id}`);
+                if (qtyInput) qtyInput.value = cart[id] ? cart[id].qty : 0;
+                const subtotalEl = document.getElementById(`subtotal-${id}`);
+                if (subtotalEl && cart[id]) subtotalEl.textContent = `₱${cart[id].qty * item.price}`;
+                const qtyMulEl = document.getElementById(`qtymul-${id}`);
+                if (qtyMulEl && cart[id]) qtyMulEl.textContent = `${cart[id].qty} × ₱${item.price}/${item.unit}`;
+                updateCartUI();
+            } else {
+                renderMenu();
+                updateCartUI();
             }
-
-            updateCartUI();
         }
 
         function updateCartUI() {
@@ -847,40 +847,73 @@
                         </div>
                         <p class="text-sm font-medium text-gray-500">Your cart is empty.</p>
                         <button onclick="toggleCart()" class="mt-4 text-orange-600 text-sm font-bold hover:underline">Start Ordering</button>
-                    </div>
-                `;
+                    </div>`;
                 checkoutBtn.disabled = true;
                 cartBadge.classList.add('scale-0');
             } else {
                 cartItemsContainer.innerHTML = items.map(item => {
                     const itemTotal = item.price * item.qty;
+                    const menuItem = menuItems.find(m => m.id === item.id);
+                    const maxStock = menuItem ? menuItem.stock : 999;
+                    const atCartMax = item.qty >= maxStock;
                     total += itemTotal;
                     totalQty += item.qty;
                     return `
-                        <div class="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm border border-gray-200">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-14 h-14 rounded-md bg-gray-100 overflow-hidden flex-shrink-0">
+                        <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-200 transition-all duration-200 hover:shadow-md">
+                            <div class="flex items-center gap-3">
+                                <div class="w-14 h-14 rounded-lg bg-gray-100 overflow-hidden flex-shrink-0 shadow-sm">
                                     <img src="${item.image}" class="w-full h-full object-cover">
                                 </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-800 text-sm">${item.name}</h4>
-                                    <p class="text-xs text-gray-500">₱${item.price} x ${item.qty}</p>
+                                <div class="flex-1 min-w-0">
+                                    <h4 class="font-bold text-gray-800 text-sm truncate">${item.name}</h4>
+                                    <p class="text-xs text-gray-400">₱${item.price}/${item.unit}</p>
+                                </div>
+                                <div class="text-right flex-shrink-0">
+                                    <span class="font-bold text-gray-900 text-base">₱${itemTotal}</span>
                                 </div>
                             </div>
-                            <div class="flex flex-col items-end">
-                                <span class="font-bold text-gray-900">₱${itemTotal}</span>
-                                <div class="flex items-center mt-2 bg-gray-50 rounded border border-gray-200">
-                                    <button onclick="updateQuantity(${item.id}, -1)" class="px-2 py-0.5 text-gray-500 hover:text-red-600 hover:bg-gray-100 rounded-l transition">
-                                        -
+                            
+                            <!-- Cart Quantity Controls -->
+                            <div class="flex items-center justify-end mt-3 pt-2 border-t border-gray-100">
+                                <div class="flex items-center bg-gray-50 rounded-lg border border-gray-200 overflow-hidden shadow-inner">
+                                    <button 
+                                        onclick="updateQuantity(${item.id}, -1)" 
+                                        class="qty-btn w-9 h-9 flex items-center justify-center transition-colors ${item.qty === 1 ? 'hover:bg-red-50 active:bg-red-100' : 'hover:bg-gray-100 active:bg-gray-200'}"
+                                    >
+                                        ${item.qty === 1 ? `
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        ` : `
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" />
+                                            </svg>
+                                        `}
                                     </button>
-                                    <span class="px-1 text-xs font-bold text-gray-700 w-4 text-center">${item.qty}</span>
-                                    <button onclick="updateQuantity(${item.id}, 1)" class="px-2 py-0.5 text-gray-500 hover:text-green-600 hover:bg-gray-100 rounded-r transition">
-                                        +
+                                    <input 
+                                        type="number" 
+                                        inputmode="numeric"
+                                        min="1" 
+                                        max="${maxStock}" 
+                                        value="${item.qty}"
+                                        onfocus="this.select()"
+                                        onchange="setQuantity(${item.id}, this.value)"
+                                        onblur="setQuantity(${item.id}, this.value)"
+                                        onkeydown="if(event.key==='Enter'){this.blur()}"
+                                        class="cart-qty-input w-14 h-9 text-center font-bold text-sm text-gray-800 bg-white border-x border-gray-200 focus:outline-none focus:bg-orange-50 transition-colors"
+                                    />
+                                    <button 
+                                        onclick="${!atCartMax ? `updateQuantity(${item.id}, 1)` : ''}" 
+                                        class="qty-btn w-9 h-9 flex items-center justify-center transition-colors ${atCartMax ? 'opacity-30 cursor-not-allowed' : 'hover:bg-green-50 active:bg-green-100'}"
+                                        ${atCartMax ? 'disabled' : ''}
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ${atCartMax ? 'text-gray-400' : 'text-green-600'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                                        </svg>
                                     </button>
                                 </div>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
                 }).join('');
                 
                 checkoutBtn.disabled = false;
@@ -895,17 +928,13 @@
         // UI TOGGLES
         // ============================================
         function handleOverlayClick(event) {
-            // Only close cart if clicking directly on the overlay, not on child elements
-            if (event.target.id === 'cart-overlay') {
-                toggleCart();
-            }
+            if (event.target.id === 'cart-overlay') toggleCart();
         }
 
         function toggleCart() {
             const sidebar = document.getElementById('cart-sidebar');
             const overlay = document.getElementById('cart-overlay');
             const body = document.body;
-            
             if (sidebar.classList.contains('translate-x-full')) {
                 sidebar.classList.remove('translate-x-full');
                 overlay.classList.remove('hidden');
@@ -918,123 +947,60 @@
         }
 
         // ============================================
-        // CHECKOUT CLICK — CHECK STORE STATUS FIRST
+        // CHECKOUT
         // ============================================
         async function handleCheckoutClick() {
             const checkoutBtn = document.getElementById('checkout-btn');
             const checkoutBtnText = document.getElementById('checkout-btn-text');
             const checkoutSpinner = document.getElementById('checkout-spinner');
-
-            // Disable button and show loading spinner
             checkoutBtn.disabled = true;
             checkoutBtnText.textContent = 'Checking store status...';
             checkoutSpinner.classList.remove('hidden');
-
             try {
-                // Always do a fresh check before proceeding to checkout
                 const isOpen = await freshStoreCheck();
-
-                if (!isOpen) {
-                    // Store is closed — close cart sidebar and show closed modal
-                    toggleCart();
-                    showStoreClosedModal();
-                    return;
-                }
-                
-                // Check stock availability
+                if (!isOpen) { toggleCart(); showStoreClosedModal(); return; }
                 checkoutBtnText.textContent = 'Verifying stock...';
                 const stockCheck = await verifyStockAvailability();
-                
-                if (!stockCheck.success) {
-                    // Stock issues found
-                    toggleCart();
-                    showStockErrorModal(stockCheck.issues);
-                    return;
-                }
-                
-                // Store is open and stock is available — proceed to checkout
+                if (!stockCheck.success) { toggleCart(); showStockErrorModal(stockCheck.issues); return; }
                 openCheckout();
-                
             } catch (error) {
                 console.error('Error during checkout check:', error);
-                // On error, allow checkout (fail open)
                 openCheckout();
             } finally {
-                // Reset button state
                 checkoutBtn.disabled = false;
                 checkoutBtnText.textContent = 'Proceed to Checkout';
                 checkoutSpinner.classList.add('hidden');
-                // Re-evaluate if button should be disabled (empty cart)
-                if (Object.values(cart).length === 0) {
-                    checkoutBtn.disabled = true;
-                }
+                if (Object.values(cart).length === 0) checkoutBtn.disabled = true;
             }
         }
 
-        // ============================================
-        // VERIFY STOCK AVAILABILITY
-        // ============================================
         async function verifyStockAvailability() {
             try {
-                // Fetch latest stock from Google Sheets
                 const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getStock&t=' + Date.now());
                 const data = await response.json();
-                
-                if (!data.stock) {
-                    return { success: true }; // If can't verify, allow checkout
-                }
-                
+                if (!data.stock) return { success: true };
                 const issues = [];
                 const cartItems = Object.values(cart);
-                
-                // Check each cart item against current stock
                 cartItems.forEach(cartItem => {
                     const stockItem = data.stock.find(s => s.name === cartItem.name);
-                    
-                    if (!stockItem) {
-                        return; // Item not found in stock sheet, allow it
-                    }
-                    
+                    if (!stockItem) return;
                     const availableStock = parseInt(stockItem.stock) || 0;
-                    
                     if (availableStock === 0) {
-                        issues.push({
-                            name: cartItem.name,
-                            requested: cartItem.qty,
-                            available: 0,
-                            type: 'out_of_stock'
-                        });
+                        issues.push({ name: cartItem.name, requested: cartItem.qty, available: 0, type: 'out_of_stock' });
                     } else if (cartItem.qty > availableStock) {
-                        issues.push({
-                            name: cartItem.name,
-                            requested: cartItem.qty,
-                            available: availableStock,
-                            type: 'insufficient'
-                        });
+                        issues.push({ name: cartItem.name, requested: cartItem.qty, available: availableStock, type: 'insufficient' });
                     }
                 });
-                
                 if (issues.length > 0) {
-                    // Update local menu items with latest stock
-                    data.stock.forEach(item => {
-                        const menuItem = menuItems.find(m => m.name === item.name);
-                        if (menuItem) {
-                            menuItem.stock = parseInt(item.stock) || 0;
-                        }
-                    });
-                    
-                    // Re-render menu with updated stock
+                    data.stock.forEach(item => { const menuItem = menuItems.find(m => m.name === item.name); if (menuItem) menuItem.stock = parseInt(item.stock) || 0; });
                     renderMenu();
                     updateCartUI();
-                    
                     return { success: false, issues: issues };
                 }
-                
                 return { success: true };
-                
             } catch (error) {
                 console.error('Error verifying stock:', error);
-                return { success: true }; // On error, allow checkout
+                return { success: true };
             }
         }
 
@@ -1045,145 +1011,63 @@
             document.getElementById('checkout-modal').classList.remove('hidden');
         }
 
-        function closeCheckout() {
-            document.getElementById('checkout-modal').classList.add('hidden');
-        }
-
-        function closeErrorModal() {
-            document.getElementById('error-modal').classList.add('hidden');
-        }
+        function closeCheckout() { document.getElementById('checkout-modal').classList.add('hidden'); }
+        function closeErrorModal() { document.getElementById('error-modal').classList.add('hidden'); }
 
         // ============================================
-        // ORDER SUBMISSION — DOUBLE-CHECK STORE STATUS
+        // ORDER SUBMISSION
         // ============================================
         async function handleOrder(e) {
             e.preventDefault();
-            
             const submitBtn = document.getElementById('submit-order-btn');
             const submitBtnText = document.getElementById('submit-btn-text');
             const submitBtnIcon = document.getElementById('submit-btn-icon');
             const submitSpinner = document.getElementById('submit-spinner');
             
-            // Validate phone number
             const phone = document.getElementById('customer-phone').value;
             if (phone.length !== 11 || !/^[0-9]{11}$/.test(phone)) {
-                document.getElementById('error-message').textContent = 
-                    'Please enter a valid 11-digit contact number (e.g., 09171234567)';
+                document.getElementById('error-message').textContent = 'Please enter a valid 11-digit contact number (e.g., 09171234567)';
                 closeCheckout();
                 document.getElementById('error-modal').classList.remove('hidden');
                 return;
             }
             
-            // Disable button and show loading
             submitBtn.disabled = true;
             submitBtnText.textContent = 'Checking store...';
             submitBtnIcon.classList.add('hidden');
             submitSpinner.classList.remove('hidden');
 
-            // Double-check store status right before submitting
             try {
                 const isOpen = await freshStoreCheck();
-                
-                if (!isOpen) {
-                    // Store closed between checkout open and order submit
-                    closeCheckout();
-                    showStoreClosedModal();
-                    // Reset button
-                    submitBtn.disabled = false;
-                    submitBtnText.textContent = 'Place Order';
-                    submitBtnIcon.classList.remove('hidden');
-                    submitSpinner.classList.add('hidden');
-                    return;
-                }
-                
-                // Verify stock one more time before submitting
+                if (!isOpen) { closeCheckout(); showStoreClosedModal(); submitBtn.disabled = false; submitBtnText.textContent = 'Place Order'; submitBtnIcon.classList.remove('hidden'); submitSpinner.classList.add('hidden'); return; }
                 submitBtnText.textContent = 'Verifying stock...';
                 const stockCheck = await verifyStockAvailability();
-                
-                if (!stockCheck.success) {
-                    // Stock changed during checkout
-                    closeCheckout();
-                    showStockErrorModal(stockCheck.issues);
-                    // Reset button
-                    submitBtn.disabled = false;
-                    submitBtnText.textContent = 'Place Order';
-                    submitBtnIcon.classList.remove('hidden');
-                    submitSpinner.classList.add('hidden');
-                    return;
-                }
-                
-            } catch (error) {
-                console.error('Error re-checking store status:', error);
-                // On error, allow submission (fail open)
-            }
+                if (!stockCheck.success) { closeCheckout(); showStockErrorModal(stockCheck.issues); submitBtn.disabled = false; submitBtnText.textContent = 'Place Order'; submitBtnIcon.classList.remove('hidden'); submitSpinner.classList.add('hidden'); return; }
+            } catch (error) { console.error('Error re-checking store status:', error); }
 
-            // Update button text for submission phase
             submitBtnText.textContent = 'Submitting...';
-
             const name = document.getElementById('customer-name').value;
             const items = Object.values(cart);
             let total = 0;
-
-            const orderItems = items.map(item => {
-                const itemTotal = item.price * item.qty;
-                total += itemTotal;
-                return {
-                    name: item.name,
-                    quantity: item.qty,
-                    price: item.price,
-                    total: itemTotal
-                };
-            });
+            const orderItems = items.map(item => { const itemTotal = item.price * item.qty; total += itemTotal; return { name: item.name, quantity: item.qty, price: item.price, total: itemTotal }; });
 
             let summary = `ORDER FOR RYAN'S STREET FOOD\n`;
             summary += `---------------------------\n`;
-            summary += `Name: ${name}\n`;
-            summary += `Contact: ${phone}\n\n`;
-            summary += `ITEMS:\n`;
-            
-            items.forEach(item => {
-                const itemTotal = item.price * item.qty;
-                summary += `• ${item.qty}x ${item.name} (₱${itemTotal})\n`;
-            });
-            
-            summary += `\n---------------------------\n`;
-            summary += `TOTAL: ₱${total.toFixed(2)}\n`;
-            summary += `Payment: GCash`;
+            summary += `Name: ${name}\nContact: ${phone}\n\nITEMS:\n`;
+            items.forEach(item => { summary += `• ${item.qty}x ${item.name} (₱${item.price * item.qty})\n`; });
+            summary += `\n---------------------------\nTOTAL: ₱${total.toFixed(2)}\nPayment: GCash`;
 
-            const orderData = {
-                timestamp: new Date().toISOString(),
-                customerName: name,
-                customerPhone: phone,
-                items: JSON.stringify(orderItems),
-                orderItems: JSON.stringify(orderItems), // Added for stock deduction
-                totalAmount: total.toFixed(2),
-                paymentMethod: 'GCash'
-            };
+            const orderData = { timestamp: new Date().toISOString(), customerName: name, customerPhone: phone, items: JSON.stringify(orderItems), orderItems: JSON.stringify(orderItems), totalAmount: total.toFixed(2), paymentMethod: 'GCash' };
 
             try {
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(orderData)
-                });
-
+                await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
                 document.getElementById('order-summary-text').value = summary;
                 closeCheckout();
                 document.getElementById('success-modal').classList.remove('hidden');
-                
-                // Refresh stock after successful order
-                setTimeout(() => {
-                    fetchMenuStock();
-                }, 2000);
-
+                setTimeout(() => { fetchMenuStock(); }, 2000);
             } catch (error) {
                 console.error('Error submitting order:', error);
-                
-                document.getElementById('error-message').textContent = 
-                    'Failed to submit order. Please check your internet connection and try again.';
+                document.getElementById('error-message').textContent = 'Failed to submit order. Please check your internet connection and try again.';
                 closeCheckout();
                 document.getElementById('error-modal').classList.remove('hidden');
             } finally {
@@ -1201,27 +1085,21 @@
             const copyText = document.getElementById("order-summary-text");
             copyText.select();
             copyText.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(copyText.value).then(() => {
-                showToast();
-            });
+            navigator.clipboard.writeText(copyText.value).then(() => { showToast(); });
         }
 
         function showToast() {
             const toast = document.getElementById('toast');
             toast.textContent = 'Copied to clipboard!';
             toast.classList.remove('opacity-0');
-            setTimeout(() => {
-                toast.classList.add('opacity-0');
-            }, 3000);
+            setTimeout(() => { toast.classList.add('opacity-0'); }, 3000);
         }
 
         function showToastMessage(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
             toast.classList.remove('opacity-0');
-            setTimeout(() => {
-                toast.classList.add('opacity-0');
-            }, 3000);
+            setTimeout(() => { toast.classList.add('opacity-0'); }, 3000);
         }
 
         function resetApp() {
@@ -1233,12 +1111,7 @@
             window.scrollTo(0,0);
         }
 
-        // Periodically re-check store status and menu stock every 500ms for real-time updates
-        setInterval(() => {
-            checkStoreStatus();
-            fetchMenuStock();
-        }, 500); // 500 milliseconds
-
+        setInterval(() => { checkStoreStatus(); fetchMenuStock(); }, 500);
     </script>
 </body>
 </html>
