@@ -403,6 +403,7 @@
         let cart = {};
         let storeOpen = true;
         let lastStoreCheck = 0;
+        let storeClosedBannerDismissed = false; // Track if user dismissed the banner
         const STORE_CHECK_COOLDOWN = 1000; // 1 second cooldown between checks
 
         // Initialization
@@ -428,6 +429,10 @@
                 } else {
                     storeOpen = true;
                     hideStoreClosedBanner();
+                    // Reset the dismissed flag when store reopens
+                    if (!data.storeClosed && storeClosedBannerDismissed) {
+                        storeClosedBannerDismissed = false;
+                    }
                 }
                 
                 return storeOpen;
@@ -489,6 +494,11 @@
         }
 
         function showStoreClosedBanner() {
+            // Don't show if user already dismissed it
+            if (storeClosedBannerDismissed) {
+                return;
+            }
+            
             const banner = document.getElementById('store-closed-banner');
             if (banner) {
                 banner.classList.remove('hidden');
@@ -501,6 +511,7 @@
             if (banner) {
                 banner.classList.add('hidden');
                 document.body.style.overflow = '';
+                storeClosedBannerDismissed = true; // Mark as dismissed
             }
         }
 
