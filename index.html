@@ -1235,11 +1235,11 @@
             window.scrollTo(0,0);
         }
 
-        // Periodically re-check store status and menu stock every 1 second for real-time updates
+        // Periodically re-check store status and menu stock every 500ms for real-time updates
         setInterval(() => {
             checkStoreStatus();
             fetchMenuStock();
-        }, 1000); // 1 second = 1000 milliseconds
+        }, 500); // 500 milliseconds
 
     </script>
 </body>
