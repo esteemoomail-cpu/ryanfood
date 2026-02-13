@@ -422,7 +422,7 @@
         let cart = {};
         let storeOpen = true;
         let lastStoreCheck = 0;
-        const STORE_CHECK_COOLDOWN = 10000; // 10 seconds cooldown between checks
+        const STORE_CHECK_COOLDOWN = 1000; // 1 second cooldown between checks
 
         // Initialization
         document.addEventListener('DOMContentLoaded', () => {
@@ -1124,11 +1124,11 @@
             window.scrollTo(0,0);
         }
 
-        // Periodically re-check store status and menu stock every 60 seconds
+        // Periodically re-check store status and menu stock every 1 second for real-time updates
         setInterval(() => {
             checkStoreStatus();
             fetchMenuStock();
-        }, 60000);
+        }, 1000); // 1 second = 1000 milliseconds
 
     </script>
 </body>
